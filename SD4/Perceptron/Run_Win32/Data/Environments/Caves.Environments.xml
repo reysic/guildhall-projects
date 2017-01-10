@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<EnvironmentBlueprint name ="" size="64,32">
+  <GenerationProcessData generator="CellularAutomata" steps="5"></GenerationProcessData>
+  <GenerationProcessData generator="CellularAutomata" steps="2"></GenerationProcessData>
+</EnvironmentBlueprint>

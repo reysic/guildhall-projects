@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ItemBlueprints>
+  <ItemBlueprint name="Cloth Cap" type="Armor" armorAmount="1" glyph="(" color="56,200,244" />
+  <ItemBlueprint name="Chain Helm" type="Armor" armorAmount="2" glyph="(" color="56,200,244" />
+  <ItemBlueprint name="Chain Chest" type="Armor" armorAmount="3" glyph="(" color="56,200,244" />
+  <ItemBlueprint name="Iron Helm" type="Armor" armorAmount="3" glyph="(" color="56,200,244" />
+  <ItemBlueprint name="Iron Chest" type="Armor" armorAmount="4" glyph="(" color="56,200,244" />
+</ItemBlueprints>

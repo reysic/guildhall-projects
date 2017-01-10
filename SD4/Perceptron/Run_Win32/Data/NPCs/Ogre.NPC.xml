@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<NPCBlueprints>
+  <NPCBlueprint name="Ogre" faction="Ogre" maxHealth="6" damage="3" glyph="O" color="0,255,0" doesFly="false" turnDuration="1.0">
+    <Behaviors>
+      <Wander chanceToRest="0.5" />
+      <Chase />
+      <MeleeAttack chanceToHit="0.75" />
+    </Behaviors>
+  </NPCBlueprint>
+
+  <NPCBlueprint name="Ogre Magi" maxHealth="4"  damage="2" glyph="O" color="180,0,190" doesFly="false" turnDuration="1.0">
+    <Faction name="Ogre" loves="Undead"/>
+    <Behaviors>
+      <Wander chanceToRest="0.5" />
+      <RangedAttack chanceToHit="0.5" />
+    </Behaviors>
+  </NPCBlueprint>
+</NPCBlueprints>
