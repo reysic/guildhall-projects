@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FeatureBlueprints>
+  <FeatureBlueprint name="Wooden Door" glyph="D" color="145,85,7" type = "Door"
+    startState="closed"
+    offGlyph= "+"  onGlyph= "-"
+    offBlocksMovement="true"  onBlocksMovement="false"
+    offBlocksLOS="true" onBlocksLOS="false"
+    canTurnOff="true" canTurnOn="true"/>
+  <FeatureBlueprint name="Portcullis" glyph="D" color="255,255,255" type = "Door"
+    startState="closed"
+    offGlyph= "+"  onGlyph= "-"
+    offBlocksMovement="true"  onBlocksMovement="false"
+    offBlocksLOS="false" onBlocksLOS="false"
+    canTurnOff="true" canTurnOn="true"/>
+</FeatureBlueprints>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<NPCBlueprints>
+  <NPCBlueprint name="Zombie" faction="Undead" maxHealth="5" damage="3" glyph="Z" color="18,129,18" doesFly="false" turnDuration="1.0">
+    <Behaviors>
+      <Wander chanceToRest="0.75" />
+      <Chase />
+      <MeleeAttack chanceToHit="0.75" />
+    </Behaviors>
+  </NPCBlueprint>
+</NPCBlueprints>

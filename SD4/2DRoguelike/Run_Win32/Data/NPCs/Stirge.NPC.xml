@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<NPCBlueprints>
+  <NPCBlueprint name="Stirge" faction="Stirge" maxHealth="3" damage="2" glyph="X" color="155,23,87" doesFly="true" turnDuration="1.0">
+    <Behaviors>
+      <Wander chanceToRest="0.5" />
+      <Chase />
+      <MeleeAttack chanceToHit="0.75" />
+    </Behaviors>
+  </NPCBlueprint>
+</NPCBlueprints>

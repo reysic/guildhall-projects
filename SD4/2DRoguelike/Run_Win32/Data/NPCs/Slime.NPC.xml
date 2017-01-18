@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<NPCBlueprints>
+  <NPCBlueprint name="Blue Slime" faction="Slime" maxHealth="2" damage="1" glyph="s" color="0,0,255" doesFly="false" turnDuration="1.0">
+    <Behaviors>
+      <Wander chanceToRest="0.5" />
+      <RangedAttack chanceToHit="0.5"/>
+    </Behaviors>
+  </NPCBlueprint>
+
+  <NPCBlueprint name="Red Slime" faction="Slime" maxHealth="4" damage="2" glyph="s" color="255,0,0" doesFly="false" turnDuration="1.0">
+    <Behaviors>
+      <Wander chanceToRest="0.5" />
+      <RangedAttack chanceToHit="0.5" />
+    </Behaviors>
+  </NPCBlueprint>
+</NPCBlueprints>
