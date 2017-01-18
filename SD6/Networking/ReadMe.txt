@@ -1,8 +1,17 @@
-﻿SD6 Assignment 4 ReadMe
-Jeremy Hicks
+﻿ _   _      _                      _    _             
+| \ | |    | |                    | |  (_)            
+|  \| | ___| |___      _____  _ __| | ___ _ __   __ _ 
+| . ` |/ _ \ __\ \ /\ / / _ \| '__| |/ / | '_ \ / _` |
+| |\  |  __/ |_ \ V  V / (_) | |  |   <| | | | | (_| |
+|_| \_|\___|\__| \_/\_/ \___/|_|  |_|\_\_|_| |_|\__, |
+                                                 __/ |
+                                                |___/ 
+
+by Jeremy Hicks
+
 
 //-----------------------------------------------------------------------------------------------
-How To Test
+How To Test v2.0
 - Open the first instance and type the following line in the console:
   '0'
   (simply a shorthand for the net_session_create_connection lines from A3)
@@ -23,12 +32,8 @@ Known Issues
   with my implementation of reliable traffic
 
 
-
-SD6 Assignment 3 ReadMe
-Jeremy Hicks
-
 //-----------------------------------------------------------------------------------------------
-How To Test
+How To Test v1.0
 - Open the first instance and type the following lines in the console:
   'net_session_create_connection 0 PLAYER0 <associated_ip>'
   'net_session_create_connection 1 PLAYER1 <associated_ip>'

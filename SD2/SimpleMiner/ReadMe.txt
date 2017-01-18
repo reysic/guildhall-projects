@@ -10,15 +10,6 @@ by Jeremy Hicks
 
 
 //-----------------------------------------------------------------------------------------------
-Known Issues
-- Lighting has not been implemented
-- Multi-threading has not been implemented.
-- Improved water rendering has not been implemented.
-- Trees do not always render all leaf blocks near chunk boundaries.
-- All required sounds have not been implemented.
-
-
-//-----------------------------------------------------------------------------------------------
 How to Use
 Run SimpleMiner.exe to start the game.
 
@@ -51,11 +42,3 @@ Cycle through camera modes with F5.
 Cycle through physics modes with P.
 
 'ESC' key closes the game.
-
-
-//-----------------------------------------------------------------------------------------------
-Deep Learning
-Asking for help really made a difference in the amount of progress I was able to make on this project
-in the last couple weeks. Going forward I will ask for help sooner and work to maintain my morale.
-I have to approach my work with my limitations in mind so I can set realistic goals, plan accordingly,
-and stay positive.
