@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<ItemBlueprints>
-  <ItemBlueprint name="Shiv" type="Weapon" damageAmount="1" glyph="[" color="56,200,244" />
-  <ItemBlueprint name="Dagger" type="Weapon" damageAmount="2" glyph="[" color="56,200,244" />
-  <ItemBlueprint name="Axe" type="Weapon" damageAmount="3" glyph="[" color="56,200,244" />
-  <ItemBlueprint name="Greataxe" type="Weapon" damageAmount="5" glyph="[" color="56,200,244" />
-  <ItemBlueprint name="Flail" type="Weapon" damageAmount="5" glyph="[" color="56,200,244" />
-</ItemBlueprints>
