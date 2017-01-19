@@ -48,3 +48,5 @@ Temporary Items
 *.db
 *.chunk
 *.player
+SD8/UnrealAI/Intermediate/
+SD8/UnrealAI/Saved/
