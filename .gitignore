@@ -45,6 +45,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
 *.db
 *.chunk
 *.player
@@ -52,5 +53,5 @@ SD8/UnrealAI/Intermediate/
 SD8/UnrealAI/Saved/
 SD8/UnrealFlocking/Intermediate/
 SD8/UnrealFlocking/Saved/
-!.dll
-!.exe
+!*.dll
+!*.exe
