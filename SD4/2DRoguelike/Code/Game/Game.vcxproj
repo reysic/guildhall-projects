@@ -18,7 +18,7 @@
     <ProjectGuid>{0D38EB7C-DE09-4D9B-822C-FE258550DF56}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Protogame</RootNamespace>
-    <ProjectName>Perceptron</ProjectName>
+    <ProjectName>2DRoguelike</ProjectName>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
