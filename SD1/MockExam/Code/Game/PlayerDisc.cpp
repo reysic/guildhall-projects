@@ -28,7 +28,7 @@ PlayerDisc::PlayerDisc()
 	m_physicsRadius = 25.f;
 	m_cosmeticRadius = 25.f;
 
-	m_tint = Rgba( 0.3f, 0.1f, 1.0f, 1.0f );
+	m_tint = Rgba( 77, 26, 255, 255 );
 
 	m_health = 3;
 }
@@ -63,8 +63,7 @@ void PlayerDisc::Render() const
 {
 	if ( m_health < 1 )
 		return;
-	g_theRenderer->SetDrawColor( m_tint.redValue, m_tint.greenValue, m_tint.blueValue, m_tint.alphaValue );
-	g_theRenderer->DrawFilledPolygon( 20, m_position.x, m_position.y, m_physicsRadius );
+	g_theRenderer->DrawFilledPolygon( 20, m_position.x, m_position.y, m_physicsRadius, m_tint );
 }
 
 

@@ -14,6 +14,12 @@
 
 
 //-----------------------------------------------------------------------------------------------
+const float ENEMY_DISC_SPEED = 40.0f;
+const char* ENEMY_DISC_TEXTURE_FILE = "Data/Images/Enemy.png";
+const int ENEMY_DISC_STARTING_HEALTH = 1;
+
+
+//-----------------------------------------------------------------------------------------------
 EnemyDisc::EnemyDisc()
 {
 	int randomBool = rand() % 4;
@@ -52,7 +58,7 @@ EnemyDisc::EnemyDisc()
 	m_cosmeticRadius = 25.f;
 
 	m_texture = Texture::CreateOrGetTexture( ENEMY_DISC_TEXTURE_FILE );
-	m_tint = Rgba( 0.97f, 0.46f, 0.04f, 1.0f );
+	m_tint = Rgba( 247, 117, 10, 255 );
 
 	m_health = 1;
 
@@ -88,11 +94,10 @@ void EnemyDisc::Update( float deltaSeconds )
 //-----------------------------------------------------------------------------------------------
 void EnemyDisc::Render() const
 {
-	g_theRenderer->SetDrawColor( m_tint.redValue, m_tint.greenValue, m_tint.blueValue, m_tint.alphaValue );
-	g_theRenderer->DrawFilledPolygon( 20, m_position.x, m_position.y, m_physicsRadius );
+	g_theRenderer->DrawFilledPolygon( 20, m_position.x, m_position.y, m_physicsRadius, m_tint );
 
 	g_theRenderer->PushView();
-	g_theRenderer->TranslateView( m_position );
-	g_theRenderer->DrawTexturedAABB( m_bounds, m_texture, Vector2( 0.0f, 0.0f ), Vector2( 1.0f, 1.0f ), m_tint );
+	g_theRenderer->TranslateView( Vector3( m_position.x, m_position.y, 0.0f ) );
+	g_theRenderer->DrawTexturedAABB2( m_bounds, *m_texture, Vector2( 0.0f, 0.0f ), Vector2( 1.0f, 1.0f ), m_tint );
 	g_theRenderer->PopView();
 }

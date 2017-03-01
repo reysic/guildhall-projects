@@ -27,7 +27,7 @@ TheApp::TheApp()
 
 	g_theGame = new TheGame();
 
-	m_controllers[ 0 ] = new XboxController();
+	m_controllers[ 0 ] = new XboxController( 0 );
 
 	g_theRenderer = new Renderer();
 	g_theRenderer->SetOrtho( Vector2( 0.0f, 0.0f ), Vector2( 1600.0f, 900.0f ) );
@@ -114,7 +114,7 @@ void TheApp::Input()
 //-----------------------------------------------------------------------------------------------
 void TheApp::Update( float deltaSeconds )
 {
-	m_controllers[ 0 ]->Update();
+	m_controllers[ 0 ]->Update( deltaSeconds );
 	g_theGame->Update( deltaSeconds );
 }
 

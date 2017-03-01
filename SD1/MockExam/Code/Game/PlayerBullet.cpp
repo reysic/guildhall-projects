@@ -24,7 +24,7 @@ PlayerBullet::PlayerBullet( const Vector2& playerPosition, float xboxRightStickP
 	m_physicsRadius = 5.0f;
 	m_cosmeticRadius = 5.0f;
 
-	m_tint = Rgba( 0.0f, 0.75f, 1.0f, 1.0f );
+	m_tint = Rgba( 0, 191, 255, 255 );
 
 	m_health = 1;
 }
@@ -46,6 +46,5 @@ void PlayerBullet::Update( float deltaSeconds )
 //-----------------------------------------------------------------------------------------------
 void PlayerBullet::Render() const
 {
-	g_theRenderer->SetDrawColor( m_tint.redValue, m_tint.greenValue, m_tint.blueValue, m_tint.alphaValue );
-	g_theRenderer->DrawFilledPolygon( 20, m_position.x, m_position.y, m_physicsRadius );
+	g_theRenderer->DrawFilledPolygon( 20, m_position.x, m_position.y, m_physicsRadius, m_tint );
 }

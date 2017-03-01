@@ -142,7 +142,7 @@ void TheGame::Render() const
 		float fractionComplete = secondsSinceStart / SCREEN_FLASH_DURATION;
 		fractionComplete = ClampFloatZeroToOne( fractionComplete );
 
-		g_theRenderer->DrawQuad( Vector2( 0.0f, 0.0f ), Vector2( 1600.0f, 900.0f ), Rgba( 1.0f, 0.0f, 0.0f, 1 - fractionComplete ) );
+		g_theRenderer->DrawQuad( Vector2( 0.0f, 0.0f ), Vector2( 1600.0f, 900.0f ), Rgba( 255, 0, 0, ( unsigned char ) ( 255 - fractionComplete * 255 ) ) );
 	}
 }
 

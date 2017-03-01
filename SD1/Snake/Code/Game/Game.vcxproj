@@ -14,7 +14,7 @@
     <ProjectGuid>{0D38EB7C-DE09-4D9B-822C-FE258550DF56}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Protogame</RootNamespace>
-    <ProjectName>MockExam</ProjectName>
+    <ProjectName>Snake</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -100,26 +100,20 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="EnemyDisc.cpp" />
-    <ClCompile Include="Entity.cpp" />
+    <ProjectReference Include="..\..\..\..\Engine\Code\Engine\Engine.vcxproj">
+      <Project>{b2566dbc-f0da-4bf8-a963-90be8817752f}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Main_Win32.cpp" />
-    <ClCompile Include="PlayerBullet.cpp" />
-    <ClCompile Include="PlayerDisc.cpp" />
+    <ClCompile Include="Snake.cpp" />
     <ClCompile Include="TheApp.cpp" />
     <ClCompile Include="TheGame.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EnemyDisc.hpp" />
-    <ClInclude Include="Entity.hpp" />
-    <ClInclude Include="PlayerBullet.hpp" />
-    <ClInclude Include="PlayerDisc.hpp" />
+    <ClInclude Include="Snake.hpp" />
     <ClInclude Include="TheApp.hpp" />
     <ClInclude Include="TheGame.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Engine\Code\Engine\Engine.vcxproj">
-      <Project>{b2566dbc-f0da-4bf8-a963-90be8817752f}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
