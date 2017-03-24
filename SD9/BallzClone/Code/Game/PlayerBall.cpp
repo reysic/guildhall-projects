@@ -1,6 +1,3 @@
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
 #include <math.h>
 #include <stdlib.h>
 
@@ -16,24 +13,13 @@
 
 //-----------------------------------------------------------------------------------------------
 PlayerBall::PlayerBall()
+	: m_position( PLAYER_BALL_INITIAL_POSITION )
+	, m_velocity( Vector2::ZERO )
+	, m_radius( 10.0f )
+	, m_tint( Rgba::WHITE )
+	, m_canDrawAimLine( false )
+	, m_forwardDirection( Vector2::ZERO )
 {
-	m_position.x = 350.0f;
-	m_position.y = 10.0f;
-
-	m_velocity.x = 0.f;
-	m_velocity.y = 0.0f;
-
-	m_orientationDegrees = 0.0f;
-	m_angularVelocityDegreesPerSecond = 0.0f;
-	m_physicsRadius = 10.0f;
-	m_cosmeticRadius = 10.0f;
-
-	m_tint = Rgba::WHITE;
-
-	m_health = 3;
-
-	m_canDrawAimLine = false;
-	m_forwardDirection = Vector2::ZERO;
 }
 
 
@@ -89,13 +75,8 @@ void PlayerBall::Render() const
 {
 	g_theRenderer->SetOrtho( Vector2( 0.0f, 0.0f ), Vector2( 700.0f, 900.0f ) );
 
-	if ( m_health < 1 )
-	{
-		return;
-	}
-
 	// Draw the ball
-	g_theRenderer->DrawFilledPolygon( 20, m_position.x, m_position.y, m_physicsRadius, m_tint );
+	g_theRenderer->DrawFilledPolygon( 20, m_position.x, m_position.y, m_radius, m_tint );
 
 	// Draw the aiming line
 	if ( m_canDrawAimLine )
@@ -118,31 +99,31 @@ void PlayerBall::Render() const
 void PlayerBall::CheckForScreenEdgeCollision()
 {
 	// Left side of screen
-	if ( m_position.x - m_cosmeticRadius < 0.0f )
+	if ( m_position.x - m_radius < 0.0f )
 	{
 		m_velocity = Vector2( -m_velocity.x, m_velocity.y );
-		m_position.x = 0.0f + m_cosmeticRadius;
+		m_position.x = 0.0f + m_radius;
 	}
 
 	// Right side of screen
-	if ( m_position.x + m_cosmeticRadius > 700.0f )
+	if ( m_position.x + m_radius > 700.0f )
 	{
 		m_velocity = Vector2( -m_velocity.x, m_velocity.y );
-		m_position.x = 700.0f - m_cosmeticRadius;
+		m_position.x = 700.0f - m_radius;
 	}
 
 	// Bottom side of screen
-	if ( m_position.y - m_cosmeticRadius < 0.0f )
+	if ( m_position.y - m_radius < 0.0f )
 	{
 		// Reset
-		m_velocity = Vector2( 0.0f, 0.0f );
-		m_position = Vector2( 350.0f, 10.0f );
+		m_velocity = Vector2::ZERO;
+		m_position = PLAYER_BALL_INITIAL_POSITION;
 	}
 
 	// Top side of screen
-	if ( m_position.y + m_cosmeticRadius > 900.0f )
+	if ( m_position.y + m_radius > 900.0f )
 	{
 		m_velocity = Vector2( m_velocity.x, -m_velocity.y );
-		m_position.y = 900.0f - m_cosmeticRadius;
+		m_position.y = 900.0f - m_radius;
 	}
 }

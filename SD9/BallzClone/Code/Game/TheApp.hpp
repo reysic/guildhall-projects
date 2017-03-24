@@ -14,8 +14,8 @@ class TheApp;
 
 
 //-----------------------------------------------------------------------------------------------
-class XboxController; // forward declaration of XboxController
-class Vector2; // forward declaration of Vector2
+class XboxController;
+class Vector2;
 class PolarCoordinates;
 
 
@@ -27,7 +27,10 @@ extern TheApp* g_theApp;
 class TheApp
 {
 public:
+	// Constructors & Destructors
 	TheApp();
+
+	// Methods
 	void SetKeyDownStatus( unsigned char windowsKeyCode, bool isNowDown );
 	bool GetKeyDownStatus( unsigned char windowsKeyCode );
 	bool GetXboxADownStatus() const;
@@ -42,7 +45,6 @@ public:
 	void Update( float deltaSeconds );
 	void Render() const;
 	void Shutdown();
-	bool IsQuitting();
 
 	XboxController* m_controllers[ MAX_XBOX_CONTROLLERS ];
 

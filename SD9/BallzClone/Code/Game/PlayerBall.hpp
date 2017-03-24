@@ -2,13 +2,12 @@
 
 
 //-----------------------------------------------------------------------------------------------
-class Vector2; // Forward declaration of Vector2
+class Vector2;
 
 
 //-----------------------------------------------------------------------------------------------
 const float PLAYER_BALL_SPEED = 750.0f;
-const std::string PLAYER_DISC_TEXTURE_FILE = "Data/Images/Disc";
-const int PLAYER_DISC_STARTING_HEALTH = 3;
+const Vector2 PLAYER_BALL_INITIAL_POSITION( 350.0f, 10.0f );
 
 
 //-----------------------------------------------------------------------------------------------
@@ -26,16 +25,8 @@ public:
 public:
 	Vector2		m_position;
 	Vector2		m_velocity;
-	float		m_orientationDegrees;
-	float		m_angularVelocityDegreesPerSecond;
-	float		m_physicsRadius;
-	float		m_cosmeticRadius;
-	float		m_ageInSeconds;
-	bool		m_isDead;
+	float		m_radius;
 	Rgba		m_tint;
-	Texture*	m_texture;
-	int			m_health;
-	AABB2		m_bounds;
 
 private:
 	bool		m_canDrawAimLine;

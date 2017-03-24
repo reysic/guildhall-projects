@@ -133,9 +133,3 @@ void TheApp::Shutdown()
 {
 	delete this;
 }
-
-bool TheApp::IsQuitting()
-{
-	return g_theGame->IsQuitting();
-}
-

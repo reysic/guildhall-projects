@@ -176,20 +176,6 @@ void Update()
 	s_timeLastFrameBegan = timeThisFrameBegan;
 
 	g_theApp->Update( deltaSeconds );
-
-	if ( g_theApp->IsQuitting() )
-		quitFlag = true;
-
-	if ( quitFlag && ( initiateQuitTime == 0.0f ) )
-	{
-		initiateQuitTime = ( float ) GetCurrentTimeSeconds();
-	}
-
-	float currentTime = ( float ) GetCurrentTimeSeconds();
-	if ( currentTime > ( initiateQuitTime + 2.0f ) && quitFlag )
-	{
-		g_isQuitting = true;
-	}
 }
 
 
