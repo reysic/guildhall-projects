@@ -28,7 +28,7 @@ void InitializeEngineCommon()
 	g_engineDeltaSeconds = 0.0f;
 	g_effectState = false;
 	g_drawOriginAxes = true;
-	g_debugMode = true;
+	g_debugMode = false;
 	g_lightMode = 0;
 
 	MatrixGenerateBasis( &g_engineBasis, Vector3( 0.0f, -1.0f, 0.0f ) );

@@ -328,7 +328,10 @@ void TheGame::RenderPlayingState() const
 	g_theRenderer->DrawText2D( Vector2( 10.0f, 10.0f ), std::to_string( m_turnNumber ), 20.0f, Rgba::WHITE, fixedFont );
 
 	// "Ball Count"
-	g_theRenderer->DrawText2D( Vector2( PLAYER_BALL_INITIAL_POSITION.x, PLAYER_BALL_INITIAL_POSITION.y + 20.0f ), "x" + std::to_string( GetNumBalls() ), 10.0f, Rgba::WHITE, fixedFont );
+	if ( AreAllPlayerBallsNotMoving() )
+	{
+		g_theRenderer->DrawText2D( Vector2( PLAYER_BALL_INITIAL_POSITION.x, PLAYER_BALL_INITIAL_POSITION.y + 20.0f ), "x" + std::to_string( GetNumBalls() ), 10.0f, Rgba::WHITE, fixedFont );
+	}
 
 	// Call Render() for each tile
 	for ( int tileIndex = 0; tileIndex < MAX_TILE_COUNT; ++tileIndex )
@@ -427,12 +430,12 @@ void TheGame::DrawAimLine() const
 		aimLineVector.Normalize();
 
 		PolarCoordinates xboxLeftStickPositionPolar = g_theInputSystem->GetXboxLeftStickPositionPolar( 0 );
-		float distanceIncrement = RangeMap( xboxLeftStickPositionPolar.radius, 0.5f, 1.0f, 10.0f, 30.0f );
-		float lineBallRadius = RangeMap( xboxLeftStickPositionPolar.radius, 0.5f, 1.0f, 2.0f, 4.5f );
+		float distanceIncrement = RangeMap( xboxLeftStickPositionPolar.radius, 0.5f, 1.0f, 10.0f, 75.0f );
+		float lineBallRadius = RangeMap( xboxLeftStickPositionPolar.radius, 0.5f, 1.0f, 2.0f, 10.0f );
 
 		for ( float distanceAlongAimLine = distanceIncrement; distanceAlongAimLine <= ( distanceIncrement * 10.0f ); distanceAlongAimLine += distanceIncrement )
 		{
-			g_theRenderer->DrawFilledPolygon( 20, lineStartPosition.x + distanceAlongAimLine * aimLineVector.x, lineStartPosition.y + distanceAlongAimLine* aimLineVector.y, lineBallRadius, Rgba::WHITE );
+			g_theRenderer->DrawFilledPolygon( 20, lineStartPosition.x + distanceAlongAimLine * aimLineVector.x, lineStartPosition.y + distanceAlongAimLine * aimLineVector.y, lineBallRadius, Rgba::WHITE );
 		}
 		//g_theRenderer->DrawLine3D( Vector3( m_position.x, m_position.y, 0.0f ), Vector3( lineEndPosition.x, lineEndPosition.y, 0.0f ), Rgba::WHITE, 2.5f );
 	}
@@ -512,7 +515,7 @@ void TheGame::SpawnEmitter( Vector2 emitterLocation )
 	{
 		if ( m_emitters[ emitterIndex ] == nullptr )
 		{
-			m_emitters[ emitterIndex ] = new Emitter( emitterLocation, Vector2( 1.0f, 1.0f ), 0.5f, 5,
+			m_emitters[ emitterIndex ] = new Emitter( emitterLocation, Vector2( 1.0f, 1.0f ), 0.5f, 10,
 				EMITTER_TYPE_EXPLOSION );
 			return;
 		}
@@ -654,6 +657,7 @@ void TheGame::AdvanceTurn()
 	AdvanceTiles();
 	AdvancePowerUps();
 	SpawnMore();
+	g_theAudioSystem->PlaySound( g_theAudioSystem->CreateOrGetSound( "Data/Sounds/162476__kastenfrosch__gotitem.mp3" ), 1.0f );
 }
 
 
@@ -745,7 +749,7 @@ void TheGame::Reset()
 
 
 //-----------------------------------------------------------------------------------------------
-bool TheGame::AreAllPlayerBallsNotMoving()
+bool TheGame::AreAllPlayerBallsNotMoving() const
 {
 	for ( int playerBallIndex = 0; playerBallIndex < MAX_PLAYER_BALL_COUNT; ++playerBallIndex )
 	{

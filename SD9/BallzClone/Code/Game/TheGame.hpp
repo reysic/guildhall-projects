@@ -76,7 +76,7 @@ public:
 	void AdvancePowerUps();
 	void EndGame();
 	void Reset();
-	bool AreAllPlayerBallsNotMoving();
+	bool AreAllPlayerBallsNotMoving() const;
 	bool IsAPlayerBallNotMoving();
 	void ShootPlayerBall();
 	int GetNumBalls() const;

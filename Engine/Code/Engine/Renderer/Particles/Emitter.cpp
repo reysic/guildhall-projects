@@ -58,8 +58,8 @@ Emitter::Emitter( const Vector2& position, const Vector2& direction, const float
 	HandleTypeConstruction();
 
 	m_texture = Texture::CreateOrGetTexture( "Data/Images/particle.png" );
-	m_bounds.mins = Vector2( -5.0f, -5.0f );
-	m_bounds.maxs = Vector2( 5.0f, 5.0f );
+	m_bounds.mins = Vector2( -2.5f, -2.5f );
+	m_bounds.maxs = Vector2( 2.5f, 2.5f );
 
 	m_isLooping = false;
 }
@@ -228,20 +228,22 @@ void Emitter::MakeExplosion()
 		p.lifetime = 0.6f;
 		p.secondsLeft = p.lifetime;
 		
-		if ( i % 2 == 0 && i % 3 == 0 )
-		{
-			p.color = Rgba::ORANGE;
-		}
-		else if ( i % 2 )
-		{
-			p.color = Rgba::RED;
-		}
-		else
-		{
-			p.color = Rgba::YELLOW;
-		}
+// 		if ( i % 2 == 0 && i % 3 == 0 )
+// 		{
+// 			p.color = Rgba::ORANGE;
+// 		}
+// 		else if ( i % 2 )
+// 		{
+// 			p.color = Rgba::RED;
+// 		}
+// 		else
+// 		{
+// 			p.color = Rgba::YELLOW;
+// 		}
 
-		p.AddForce( dir, GetRandomFloatInRange( 100.0f, 125.0f ), 0.2f, false );
+		p.color = Rgba::ORANGE;
+
+		p.AddForce( dir, GetRandomFloatInRange( 150.0f, 250.0f ), 0.2f, false );
 
 		m_particles.push_back( p );
 	};
