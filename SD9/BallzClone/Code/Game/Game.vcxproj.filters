@@ -14,9 +14,6 @@
     <ClCompile Include="TheGame.cpp">
       <Filter>General</Filter>
     </ClCompile>
-    <ClCompile Include="TheApp.cpp">
-      <Filter>General</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerBall.cpp">
       <Filter>General</Filter>
     </ClCompile>
@@ -29,9 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TheGame.hpp">
-      <Filter>General</Filter>
-    </ClInclude>
-    <ClInclude Include="TheApp.hpp">
       <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="PlayerBall.hpp">

@@ -9,10 +9,12 @@
 
 #pragma comment( lib, "opengl32" ) // Link in the OpenGL32.lib static library
 
-#include "Engine/Math/Vector2.hpp"
 #include "Engine/Core/Time.hpp"
+#include "Engine/Input/DeveloperConsole.hpp"
+#include "Engine/Input/InputSystem.hpp"
+#include "Engine/Math/Vector2.hpp"
 #include "Engine/Renderer/Renderer.hpp"
-#include "Game/TheApp.hpp"
+#include "Game/TheGame.hpp"
 
 
 //-----------------------------------------------------------------------------------------------
@@ -39,26 +41,38 @@ const char* APP_NAME = "BallzClone by Jeremy Hicks";
 LRESULT CALLBACK WindowsMessageHandlingProcedure( HWND windowHandle, UINT wmMessageCode, WPARAM wParam, LPARAM lParam )
 {
 	unsigned char asKey = ( unsigned char ) wParam;
+
+	if ( wmMessageCode == WM_CHAR && g_theDeveloperConsole->m_isOpen )
+	{
+		g_theDeveloperConsole->ReceiveInput( asKey );
+	}
+
 	switch ( wmMessageCode )
 	{
-	case WM_CLOSE:
-	case WM_DESTROY:
-	case WM_QUIT:
-		g_isQuitting = true;
-		return 0;
-
-	case WM_KEYDOWN:
-		g_theApp->SetKeyDownStatus( asKey, true );
-		if ( asKey == VK_ESCAPE )
+		case WM_CLOSE:
+		case WM_DESTROY:
+		case WM_QUIT:
 		{
 			g_isQuitting = true;
 			return 0;
 		}
-		break;
 
-	case WM_KEYUP:
-		g_theApp->SetKeyDownStatus( asKey, false );
-		break;
+		case WM_KEYDOWN:
+		{
+			g_theInputSystem->SetKeyDownStatus( asKey, true );
+			if ( asKey == VK_ESCAPE )
+			{
+				g_isQuitting = true;
+				return 0;
+			}
+			break;
+		}
+
+		case WM_KEYUP:
+		{
+			g_theInputSystem->SetKeyDownStatus( asKey, false );
+			break;
+		}
 	}
 
 	return DefWindowProc( windowHandle, wmMessageCode, wParam, lParam );
@@ -154,13 +168,9 @@ void RunMessagePump()
 //-----------------------------------------------------------------------------------------------
 void Input()
 {
-	g_theApp->Input();
+	g_theGame->Input();
 	RunMessagePump();
 }
-
-
-bool quitFlag = false;
-float initiateQuitTime = 0.0f;
 
 
 //-----------------------------------------------------------------------------------------------
@@ -175,20 +185,26 @@ void Update()
 
 	s_timeLastFrameBegan = timeThisFrameBegan;
 
-	g_theApp->Update( deltaSeconds );
+	g_theGame->Update( deltaSeconds );
+
+	UpdateEngineSubsystems( deltaSeconds );
 }
 
 
 //-----------------------------------------------------------------------------------------------
 void Render()
 {
-	g_theApp->Render();
+	g_theGame->Render();
+
+	RenderEngineSubsystems();
 }
 
 
 //-----------------------------------------------------------------------------------------------
 void RunFrame()
 {
+	ProfileFrameMark();
+
 	Input();
 	Update();
 	Render();
@@ -201,8 +217,11 @@ void RunFrame()
 void Initialize( HINSTANCE applicationInstanceHandle )
 {
 	CreateOpenGLWindow( applicationInstanceHandle );
-	g_theApp = new TheApp();
-	g_theRenderer = new Renderer();
+
+	InitializeEngineSubsystems();
+
+	g_theGame = new TheGame();
+
 	g_theRenderer->SetOrtho( Vector2( 0.0f, 0.0f ), Vector2( 700.0f, 900.0f ) );
 }
 
@@ -210,16 +229,18 @@ void Initialize( HINSTANCE applicationInstanceHandle )
 //-----------------------------------------------------------------------------------------------
 void Shutdown()
 {
-	delete g_theRenderer;
-	g_theRenderer = nullptr;
-	delete g_theApp;
-	g_theApp = nullptr;
+	ShutdownEngineSubsystems();
+
+	delete g_theGame;
+	g_theGame = nullptr;
 }
 
 
 //-----------------------------------------------------------------------------------------------
 int WINAPI WinMain( HINSTANCE applicationInstanceHandle, HINSTANCE, LPSTR commandLineString, int )
 {
+	InitializeEngineCommon();
+
 	UNUSED( commandLineString );
 	Initialize( applicationInstanceHandle );
 
@@ -232,5 +253,8 @@ int WINAPI WinMain( HINSTANCE applicationInstanceHandle, HINSTANCE, LPSTR comman
 	}
 
 	Shutdown();
+
+	ShutdownEngineCommon();
+
 	return 0;
 }

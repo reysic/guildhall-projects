@@ -16,4 +16,7 @@ public:
 	int m_numHitsRemaining;
 	IntVector2 m_gridPosition;
 	Vector2 m_worldPosition;
+
+private:
+	Rgba m_tint;
 };

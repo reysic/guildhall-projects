@@ -39,7 +39,7 @@ Emitter::Emitter( const Vector2& position, const Vector2& direction, const float
 	              const int maxParticles = 1, const EmitterType type = EMITTER_TYPE_EXPLOSION, 
 	              const Vector2& minDegrees, const Vector2& maxDegrees )
 	: m_ageInSeconds( 0.0f )
-	, m_lifetimeInSeconds( 1.0f )
+	, m_lifetimeInSeconds( 0.75f )
 	, m_isDead( false )
 {
 	m_position = position;
@@ -58,8 +58,8 @@ Emitter::Emitter( const Vector2& position, const Vector2& direction, const float
 	HandleTypeConstruction();
 
 	m_texture = Texture::CreateOrGetTexture( "Data/Images/particle.png" );
-	m_bounds.mins = Vector2( -0.05f, -0.05f );
-	m_bounds.maxs = Vector2( 0.05f, 0.05f );
+	m_bounds.mins = Vector2( -5.0f, -5.0f );
+	m_bounds.maxs = Vector2( 5.0f, 5.0f );
 
 	m_isLooping = false;
 }
@@ -146,7 +146,8 @@ void Emitter::Render()
 		g_theRenderer->TranslateView( positionAsVector3 );
 		//g_theRenderer->RotateView( GetOrientationDegrees(), Vector3( 0.0f, 0.0f, 1.0f ) );
 		float percentLifeLeft = ( *partIter ).secondsLeft / ( *partIter ).lifetime;
-		Rgba scaledAlphaColor( ( *partIter ).color.r, ( *partIter ).color.g, ( *partIter ).color.b, ( unsigned char ) ( percentLifeLeft * 255 ) );
+		//Rgba scaledAlphaColor( ( *partIter ).color.r, ( *partIter ).color.g, ( *partIter ).color.b, ( unsigned char ) ( percentLifeLeft * 255 ) );
+		Rgba scaledAlphaColor( ( *partIter ).color.r, ( *partIter ).color.g, ( *partIter ).color.b, 255 );
 		g_theRenderer->DrawTexturedAABB2( m_bounds, *m_texture, Vector2( 0.f, 0.f ), Vector2( 1.f, 1.f ), scaledAlphaColor );
 		g_theRenderer->PopView();
 	}
@@ -240,7 +241,7 @@ void Emitter::MakeExplosion()
 			p.color = Rgba::YELLOW;
 		}
 
-		p.AddForce( dir, GetRandomFloatInRange( 5.0f, 10.0f ), 0.2f, false );
+		p.AddForce( dir, GetRandomFloatInRange( 100.0f, 125.0f ), 0.2f, false );
 
 		m_particles.push_back( p );
 	};

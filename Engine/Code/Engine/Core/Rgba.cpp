@@ -79,6 +79,8 @@ const Rgba Rgba::MAGENTA( 255, 0, 255, 255 );
 const Rgba Rgba::NAVY( 0, 0, 32, 255 );
 const Rgba Rgba::REDORANGE( 255, 69, 0, 255 );
 const Rgba Rgba::LIGHTOLIVEGREEN( 15, 119, 2, 255 );
+const Rgba Rgba::GOLDENROD( 255, 215, 0, 255 );
+const Rgba Rgba::VIOLET( 148, 0, 211, 255 );
 
 
 //-----------------------------------------------------------------------------------------------

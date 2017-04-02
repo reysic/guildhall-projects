@@ -159,6 +159,7 @@ void UpdateEngineSubsystems( float deltaSeconds )
 	g_theUISystem->Update( deltaSeconds );
 	g_appWindow->Update( deltaSeconds );
 	g_theInputSystem->UpdateKeyJustPressedState();
+	MemoryAnalyticsUpdate( deltaSeconds );
 }
 
 
@@ -167,4 +168,5 @@ void RenderEngineSubsystems()
 {
 	g_theDeveloperConsole->Render();
 	g_theUISystem->Render();
+	MemoryAnalyticsRender();
 }

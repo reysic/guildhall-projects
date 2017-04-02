@@ -27,6 +27,8 @@ public:
 	static const Rgba NAVY;
 	static const Rgba REDORANGE;
 	static const Rgba LIGHTOLIVEGREEN;
+	static const Rgba GOLDENROD;
+	static const Rgba VIOLET;
 	friend bool operator==( const Rgba& lhs, const Rgba& rhs );
 	friend bool operator!=( const Rgba& lhs, const Rgba& rhs );
 

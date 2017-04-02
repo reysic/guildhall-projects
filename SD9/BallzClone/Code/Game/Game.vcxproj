@@ -104,14 +104,12 @@
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Main_Win32.cpp" />
     <ClCompile Include="PlayerBall.cpp" />
-    <ClCompile Include="TheApp.cpp" />
     <ClCompile Include="TheGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tile.hpp" />
     <ClInclude Include="PowerUp.hpp" />
     <ClInclude Include="PlayerBall.hpp" />
-    <ClInclude Include="TheApp.hpp" />
     <ClInclude Include="TheGame.hpp" />
   </ItemGroup>
   <ItemGroup>
