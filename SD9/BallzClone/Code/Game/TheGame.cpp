@@ -93,11 +93,12 @@ void TheGame::HandleControllerInput()
 	{
 		float orientationRadians = xboxLeftStickPositionPolar.theta;
 		m_forwardDirection = Vector2( cos( orientationRadians ), sin( orientationRadians ) );
+		m_forwardDirection.Negate();
 	}
 
 	if ( AreAllPlayerBallsNotMoving() )
 	{
-		if ( ( xboxLeftStickPosition.Length() > 0 ) && xboxLeftStickPositionPolar.radius > 0.5f )
+		if ( ( xboxLeftStickPosition.Length() > 0 ) && xboxLeftStickPositionPolar.radius > 0.5f && xboxLeftStickPositionPolar.theta < 0.0f && xboxLeftStickPositionPolar.theta > -3.14f )
 		{
 			// Enable drawing of aim line
 			m_canDrawAimLine = true;
@@ -114,7 +115,7 @@ void TheGame::HandleControllerInput()
 		m_canDrawAimLine = false;
 	}
 
-	if ( ( xboxLeftStickPosition.Length() > 0 ) && xboxLeftStickPositionPolar.radius > 0.5f && g_theInputSystem->GetXboxADownStatus( 0 ) )
+	if ( ( xboxLeftStickPosition.Length() > 0 ) && xboxLeftStickPositionPolar.radius > 0.5f && xboxLeftStickPositionPolar.theta < 0.0f && xboxLeftStickPositionPolar.theta > -3.14f && g_theInputSystem->GetXboxADownStatus( 0 ) )
 	{
 		m_canShootBall = true;
 	}
@@ -459,7 +460,9 @@ void TheGame::SpawnPlayerBall()
 //-----------------------------------------------------------------------------------------------
 void TheGame::SpawnMore()
 {
-	for ( int spawnPositionX = 0; spawnPositionX <= 6; spawnPositionX++ )
+	int tilesSpawned = 0;
+
+	for ( int spawnPositionX = 0; spawnPositionX <= 6; ++spawnPositionX )
 	{
 		bool shouldSpawnPowerUp = GetRandomChance( POWER_UP_SPAWN_CHANCE );
 		bool shouldSpawnTile = GetRandomChance( TILE_SPAWN_CHANCE );
@@ -468,9 +471,10 @@ void TheGame::SpawnMore()
 		{
 			SpawnPowerUp( spawnPositionX );
 		}
-		else if ( shouldSpawnTile )
+		else if ( shouldSpawnTile && tilesSpawned < 7)
 		{
 			SpawnTile( spawnPositionX );
+			tilesSpawned++;
 		}
 	}
 }
@@ -493,7 +497,7 @@ void TheGame::SpawnTile( int xPosition )
 
 
 //-----------------------------------------------------------------------------------------------
-void TheGame::SpawnPowerUp( int xPosition)
+void TheGame::SpawnPowerUp( int xPosition )
 {
 	// Power Up Spawn X: 0 - 6
 	// Power Up Spawn Y: 1 - 8
@@ -654,9 +658,12 @@ void TheGame::DestroyPowerUp( PowerUp* powerUp )
 void TheGame::AdvanceTurn()
 {
 	m_turnNumber++;
-	AdvanceTiles();
 	AdvancePowerUps();
-	SpawnMore();
+	AdvanceTiles();
+	if ( m_turnNumber != 1 )
+	{
+		SpawnMore();
+	}
 	g_theAudioSystem->PlaySound( g_theAudioSystem->CreateOrGetSound( "Data/Sounds/162476__kastenfrosch__gotitem.mp3" ), 1.0f );
 }
 
@@ -722,26 +729,7 @@ void TheGame::Reset()
 {
 	m_turnNumber = 1;
 
-	// Delete and set all player ball pointers to nullptr
-	for ( int playerBallIndex = 0; playerBallIndex < MAX_PLAYER_BALL_COUNT; ++playerBallIndex )
-	{
-		delete m_playerBalls[ playerBallIndex ];
-		m_playerBalls[ playerBallIndex ] = nullptr;
-	}
-
-	// Delete and set all tile pointers to nullptr
-	for ( int tileIndex = 0; tileIndex < MAX_TILE_COUNT; ++tileIndex )
-	{
-		delete m_tiles[ tileIndex ];
-		m_tiles[ tileIndex ] = nullptr;
-	}
-
-	// Delete and set all power up pointers to nullptr
-	for ( int powerUpIndex = 0; powerUpIndex < MAX_POWER_UP_COUNT; ++powerUpIndex )
-	{
-		delete m_powerUps[ powerUpIndex ];
-		m_powerUps[ powerUpIndex ] = nullptr;
-	}
+	InitializeArrays();
 
 	SpawnPlayerBall();
 	SpawnMore();

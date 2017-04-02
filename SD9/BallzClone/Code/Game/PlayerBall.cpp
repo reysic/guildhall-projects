@@ -54,21 +54,28 @@ void PlayerBall::Render() const
 void PlayerBall::CheckForScreenEdgeCollision()
 {
 	// Left side of screen
-	if ( m_position.x - m_radius < 0.0f )
+	if ( ( m_position.x - m_radius ) < 0.0f )
 	{
 		m_velocity = Vector2( -m_velocity.x, m_velocity.y );
 		m_position.x = 0.0f + m_radius;
 	}
 
 	// Right side of screen
-	if ( m_position.x + m_radius > 700.0f )
+	if ( ( m_position.x + m_radius ) > 700.0f )
 	{
 		m_velocity = Vector2( -m_velocity.x, m_velocity.y );
 		m_position.x = 700.0f - m_radius;
 	}
 
+	// Top side of screen
+	if ( ( m_position.y + m_radius ) > 900.0f )
+	{
+		m_velocity = Vector2( m_velocity.x, -m_velocity.y );
+		m_position.y = 900.0f - m_radius;
+	}
+
 	// Bottom side of screen
-	if ( m_position.y - m_radius < 0.0f )
+	if ( ( m_position.y - m_radius ) < 0.0f )
 	{
 		// Reset
 		m_velocity = Vector2::ZERO;
@@ -79,12 +86,5 @@ void PlayerBall::CheckForScreenEdgeCollision()
 		{
 			g_theGame->AdvanceTurn();
 		}
-	}
-
-	// Top side of screen
-	if ( m_position.y + m_radius > 900.0f )
-	{
-		m_velocity = Vector2( m_velocity.x, -m_velocity.y );
-		m_position.y = 900.0f - m_radius;
 	}
 }

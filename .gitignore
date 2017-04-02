@@ -57,3 +57,5 @@ SD8/UnrealFlocking/Saved/
 !*.exe
 *.tlog
 *.idb
+*.iobj
+*.ipdb
