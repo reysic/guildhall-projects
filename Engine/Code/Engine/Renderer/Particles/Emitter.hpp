@@ -61,7 +61,7 @@ public:
 	Emitter();
 	Emitter( const Vector2& position, const Vector2& direction, const float emissionsPerSecond, 
 		     const int maxParticles, const EmitterType type, const Vector2& minDegrees = Vector2::ZERO, 
-		     const Vector2& maxDegrees = Vector2( 360.0f, 360.0f ) );
+		     const Vector2& maxDegrees = Vector2( 360.0f, 360.0f ), const Rgba& particleColor = Rgba::WHITE );
 
 	void Update( const float deltaSeconds );
 	void Render();
@@ -84,6 +84,8 @@ public:
 
 	Vector2 m_minDegrees;
 	Vector2 m_maxDegrees;
+
+	Rgba m_particleColor;
 
 	std::vector< Particle > m_particles;
 	int m_maxParticles;

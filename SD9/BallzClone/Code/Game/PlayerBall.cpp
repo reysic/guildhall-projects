@@ -12,11 +12,12 @@
 
 
 //-----------------------------------------------------------------------------------------------
-PlayerBall::PlayerBall()
-	: m_position( PLAYER_BALL_INITIAL_POSITION )
+PlayerBall::PlayerBall( const Vector2& spawnPosition )
+	: m_position( spawnPosition )
 	, m_velocity( Vector2::ZERO )
 	, m_radius( 10.0f )
 	, m_tint( Rgba::WHITE )
+	, m_hasBeenShotThisTurn( false )
 {
 }
 
@@ -79,7 +80,8 @@ void PlayerBall::CheckForScreenEdgeCollision()
 	{
 		// Reset
 		m_velocity = Vector2::ZERO;
-		m_position = PLAYER_BALL_INITIAL_POSITION;
+		m_position = Vector2( m_position.x, 10.0f );
+		g_theGame->SetNewPlayerBallStartingPosition( m_position );
 
 		// Advance turn
 		if ( g_theGame->GetGameState() != STATE_MAIN_MENU && g_theGame->AreAllPlayerBallsNotMoving() )

@@ -30,7 +30,7 @@ public:
 	AudioSystem();
 	virtual ~AudioSystem();
 	SoundID CreateOrGetSound( const char* soundFileName );
-	AudioChannelHandle PlaySound( SoundID soundID, float volumeLevel = 1.f );
+	AudioChannelHandle PlaySound( SoundID soundID, float volumeLevel = 1.0f, float pitchModifier = 1.0f );
 	void StopChannel( AudioChannelHandle channel );
 	void Update( float deltaSeconds ); // Must be called at regular intervals (e.g. every frame)
 

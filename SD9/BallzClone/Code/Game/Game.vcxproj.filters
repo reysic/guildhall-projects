@@ -23,6 +23,21 @@
     <ClCompile Include="PowerUp.cpp">
       <Filter>General</Filter>
     </ClCompile>
+    <ClCompile Include="IndicatorBall.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="AimLine.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="Neuron.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="NeuralNetworkLayer.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="NeuralNetwork.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TheGame.hpp">
@@ -35,6 +50,21 @@
       <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="PowerUp.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="IndicatorBall.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="AimLine.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Neuron.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetworkLayer.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetwork.hpp">
       <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>

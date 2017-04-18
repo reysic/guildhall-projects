@@ -14,7 +14,7 @@ PowerUp::PowerUp( const IntVector2& gridPosition )
 
 
 //-----------------------------------------------------------------------------------------------
-void PowerUp::Update( float deltaSeconds )
+void PowerUp::Update( float )
 {
 
 }

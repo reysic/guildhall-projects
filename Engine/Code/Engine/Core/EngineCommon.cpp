@@ -155,6 +155,7 @@ void ShutdownEngineSubsystems()
 void UpdateEngineSubsystems( float deltaSeconds )
 {
 	g_theInputSystem->Update( deltaSeconds );
+	g_theAudioSystem->Update( deltaSeconds );
 	g_theDeveloperConsole->Update( deltaSeconds );
 	g_theUISystem->Update( deltaSeconds );
 	g_appWindow->Update( deltaSeconds );

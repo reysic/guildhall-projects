@@ -1,3 +1,4 @@
+#include "Engine/Core/Time.hpp"
 #include "Engine/Renderer/Renderer.hpp"
 
 #include "Game/Tile.hpp"
@@ -8,6 +9,9 @@ Tile::Tile( int numHitsRemaining, const IntVector2& gridPosition )
 	: m_numHitsRemaining( numHitsRemaining )
 	, m_gridPosition( gridPosition )
 	, m_tint( Rgba::RED )
+	, m_isAnimating( false )
+	, m_animationStartTime( 0.0f )
+	, m_quadRenderOffset( 0.05f )
 {
 	m_worldPosition = Vector2( gridPosition.x * 100.0f + 50.0f, gridPosition.y * 100.0f + 50.0f );
 }
@@ -16,8 +20,14 @@ Tile::Tile( int numHitsRemaining, const IntVector2& gridPosition )
 //-----------------------------------------------------------------------------------------------
 void Tile::Update( float deltaSeconds )
 {
-	UNUSED( deltaSeconds );
+	UpdateTint();
+	UpdateHitAnimation( deltaSeconds );
+}
 
+
+//-----------------------------------------------------------------------------------------------
+void Tile::UpdateTint()
+{
 	// Convert current RGB tint to HSL
 	Vector4 floatRGBA = m_tint.FloatRepresentation();
 	float v, m, vm;
@@ -86,20 +96,20 @@ void Tile::Update( float deltaSeconds )
 	// Interpolate to new HSL
 	if ( m_numHitsRemaining < 31 )
 	{
-		hue = RangeMap( m_numHitsRemaining, 1, 30, 0.0f, 1.0f );
+		hue = RangeMap( ( float ) m_numHitsRemaining, 1.0f, 30.0f, 0.0f, 1.0f );
 	}
 	else if ( m_numHitsRemaining < 61 )
 	{
-		hue = RangeMap( m_numHitsRemaining, 31, 60, 0.0f, 1.0f );
+		hue = RangeMap( ( float ) m_numHitsRemaining, 31.0f, 60.0f, 0.0f, 1.0f );
 	}
 	else if ( m_numHitsRemaining < 91 )
 	{
-		hue = RangeMap( m_numHitsRemaining, 61, 90, 0.0f, 1.0f );
+		hue = RangeMap( ( float ) m_numHitsRemaining, 61.0f, 90.0f, 0.0f, 1.0f );
 	}
 	else
 	{
 		// Need to support higher scores
-		hue = RangeMap( m_numHitsRemaining, 1, 1000, 0.0f, 1.0f );
+		hue = RangeMap( ( float ) m_numHitsRemaining, 1.0f, 1000.0f, 0.0f, 1.0f );
 	}
 	saturation = 0.99f;
 	lightness = 0.4f;
@@ -131,52 +141,70 @@ void Tile::Update( float deltaSeconds )
 
 	switch ( sextant )
 	{
-		case 0:
-		{
-			red = v;
-			green = mid1;
-			blue = m;
-			break;
-		}
-		case 1:
-		{
-			red = mid2;
-			green = v;
-			blue = m;
-			break;
-		}
-		case 2:
-		{
-			red = m;
-			green = v;
-			blue = mid1;
-			break;
-		}
-		case 3:
-		{
-			red = m;
-			green = mid2;
-			blue = v;
-			break;
-		}
-		case 4:
-		{
-			red = mid1;
-			green = m;
-			blue = v;
-			break;
-		}
-		case 5:
-		{
-			red = v;
-			green = m;
-			blue = mid2;
-			break;
-		}
+	case 0:
+	{
+		red = v;
+		green = mid1;
+		blue = m;
+		break;
+	}
+	case 1:
+	{
+		red = mid2;
+		green = v;
+		blue = m;
+		break;
+	}
+	case 2:
+	{
+		red = m;
+		green = v;
+		blue = mid1;
+		break;
+	}
+	case 3:
+	{
+		red = m;
+		green = mid2;
+		blue = v;
+		break;
+	}
+	case 4:
+	{
+		red = mid1;
+		green = m;
+		blue = v;
+		break;
+	}
+	case 5:
+	{
+		red = v;
+		green = m;
+		blue = mid2;
+		break;
+	}
 	}
 
 	// Holy shit we finally have an interpolated RGB color
-	m_tint = Rgba( red * 255.0f, green * 255.0f, blue * 255.0f, 255 );
+	m_tint = Rgba( ( unsigned char ) ( red * 255.0f ), ( unsigned char ) ( green * 255.0f ), ( unsigned char ) ( blue * 255.0f ), 255U );
+}
+
+
+//-----------------------------------------------------------------------------------------------
+void Tile::UpdateHitAnimation( float deltaSeconds )
+{
+	deltaSeconds;
+
+	if ( GetCurrentTimeSeconds() > ( m_animationStartTime + HIT_ANIMATION_LENGTH_SEC ) )
+	{
+		m_isAnimating = false;
+		m_quadRenderOffset = 0.05f;
+	}
+
+	if ( m_isAnimating )
+	{
+		m_quadRenderOffset = RangeMap( sin( ( float ) GetCurrentTimeSeconds() * 20.0f ), -1.0f, 1.0f, 0.05f, 0.10f );
+	}
 }
 
 
@@ -186,22 +214,25 @@ void Tile::Render()
 	Vector2 screenSize( 7.0f, 9.0f );
 	g_theRenderer->SetOrtho( Vector2( 0.0f, 0.0f ), screenSize );
 
-	static BitmapFont* fixedFont = BitmapFont::CreateOrGetFont( "Data/Fonts/SquirrelFixedFont.png" );
-	float fontCellHeight = 0.25f;
-
 	g_theRenderer->DepthTestingEnabled( false );
 
-	g_theRenderer->DrawQuad( Vector2( ( float ) m_gridPosition.x + 0.05f, ( float ) m_gridPosition.y + 0.05f ), Vector2( ( float ) m_gridPosition.x + 0.95f, ( float ) m_gridPosition.y + 0.95f ), m_tint );
-	if ( m_numHitsRemaining < 10 )
-	{
-		g_theRenderer->DrawText2D( Vector2( ( float ) m_gridPosition.x + 0.35f, ( float ) m_gridPosition.y + 0.33f ), std::to_string( m_numHitsRemaining ), fontCellHeight, Rgba::BLACK, fixedFont );
-	}
-	else
-	{
-		g_theRenderer->DrawText2D( Vector2( ( float ) m_gridPosition.x + 0.2f, ( float ) m_gridPosition.y + 0.33f ), std::to_string( m_numHitsRemaining ), fontCellHeight, Rgba::BLACK, fixedFont );
-	}
+	g_theRenderer->DrawQuad( Vector2( ( float ) m_gridPosition.x + m_quadRenderOffset, ( float ) m_gridPosition.y + m_quadRenderOffset ), Vector2( ( float ) m_gridPosition.x + ( 1.0f - m_quadRenderOffset ), ( float ) m_gridPosition.y + ( 1.0f - m_quadRenderOffset ) ), m_tint );
+
+	static BitmapFont* fixedFont = BitmapFont::CreateOrGetFont( "Data/Fonts/SquirrelFixedFont.png" );
+	float fontCellHeight = 0.25f;
+	float textWidth = BitmapFont::GetTextWidth( std::to_string( m_numHitsRemaining ), fontCellHeight );
+	Vector2 textDrawPosition = Vector2( m_gridPosition.x + 0.5f - ( textWidth / 2.0f ), m_gridPosition.y + 0.5f - ( fontCellHeight / 2.0f ) );
+	g_theRenderer->DrawText2D( textDrawPosition, std::to_string( m_numHitsRemaining ), fontCellHeight, Rgba::BLACK, fixedFont );
 
 	g_theRenderer->SetOrtho( Vector2( 0.0f, 0.0f ), Vector2( 700.0f, 900.0f ) );
 
 	//g_theRenderer->DrawFilledPolygon( 20, m_worldPosition.x, m_worldPosition.y, 10.0f, Rgba::RED );
+}
+
+
+//-----------------------------------------------------------------------------------------------
+void Tile::StartHitAnimation()
+{
+	m_isAnimating = true;
+	m_animationStartTime = ( float ) GetCurrentTimeSeconds();
 }

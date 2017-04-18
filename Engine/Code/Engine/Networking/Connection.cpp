@@ -40,7 +40,7 @@ Connection::Connection( uint8_t index, Session* session, sockaddr_in address, ch
 	, m_nextSentSequenceID( 0 )
 	, m_nextExpectedSequenceID( 0 )
 {
-	strncpy( m_guid, guid, MAX_GUID_LENGTH );
+	strncpy_s( m_guid, guid, MAX_GUID_LENGTH );
 }
 
 

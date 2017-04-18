@@ -139,7 +139,7 @@ void AudioSystem::StopChannel( AudioChannelHandle channel )
 
 
 //-----------------------------------------------------------------------------------------------
-AudioChannelHandle AudioSystem::PlaySound( SoundID soundID, float volumeLevel )
+AudioChannelHandle AudioSystem::PlaySound( SoundID soundID, float volumeLevel, float pitchModifier )
 {
 	unsigned int numSounds = m_registeredSounds.size();
 	if ( soundID < 0 || soundID >= numSounds )
@@ -153,7 +153,23 @@ AudioChannelHandle AudioSystem::PlaySound( SoundID soundID, float volumeLevel )
 	m_fmodSystem->playSound( FMOD_CHANNEL_FREE, sound, false, &channelAssignedToSound );
 	if ( channelAssignedToSound )
 	{
+		// Set volume of sound
 		channelAssignedToSound->setVolume( volumeLevel );
+
+		///////////////////////////////////////////////////////////////////////////////////////
+		// Set pitch of sound
+		pitchModifier;
+// 		FMOD::DSP* myDSP;
+// 
+// 		// Create the DSP effect
+// 		m_fmodSystem->createDSPByType( FMOD_DSP_TYPE_PITCHSHIFT, &myDSP );
+// 
+// 		// Then you need to set the pitch
+// 		myDSP->setParameter( 0, pitchModifier );
+// 
+// 		// Then apply the DSP effect to the channel
+// 		m_fmodSystem->addDSP( myDSP, 0 );
+		///////////////////////////////////////////////////////////////////////////////////////
 	}
 
 	return ( AudioChannelHandle ) channelAssignedToSound;

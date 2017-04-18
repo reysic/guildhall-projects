@@ -100,6 +100,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AimLine.cpp" />
+    <ClCompile Include="IndicatorBall.cpp" />
+    <ClCompile Include="NeuralNetwork.cpp" />
+    <ClCompile Include="NeuralNetworkLayer.cpp" />
+    <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="Main_Win32.cpp" />
@@ -107,6 +112,11 @@
     <ClCompile Include="TheGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AimLine.hpp" />
+    <ClInclude Include="IndicatorBall.hpp" />
+    <ClInclude Include="NeuralNetwork.hpp" />
+    <ClInclude Include="NeuralNetworkLayer.hpp" />
+    <ClInclude Include="Neuron.hpp" />
     <ClInclude Include="Tile.hpp" />
     <ClInclude Include="PowerUp.hpp" />
     <ClInclude Include="PlayerBall.hpp" />

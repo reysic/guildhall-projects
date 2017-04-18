@@ -177,15 +177,30 @@ void Input()
 void Update()
 {
 	// Time code by Squirrel Eiserloh
+	const float MIN_SECONDS_PER_FRAME = ( 1.0f / 60.0f ) - 0.0001f;
+
 	static double s_timeLastFrameBegan = GetCurrentTimeSeconds(); // "static" local variables are initialized once, when first encountered, thus this function call only happens once
 
-	double timeThisFrameBegan = GetCurrentTimeSeconds();
+	float deltaSeconds = static_cast< float >( GetCurrentTimeSeconds() - s_timeLastFrameBegan );
+	while ( deltaSeconds < MIN_SECONDS_PER_FRAME )
+	{
+		deltaSeconds = ( float ) GetCurrentTimeSeconds() - ( float ) s_timeLastFrameBegan;
+	}
 
-	float deltaSeconds = static_cast<float>( timeThisFrameBegan - s_timeLastFrameBegan );
+	s_timeLastFrameBegan = GetCurrentTimeSeconds();
 
-	s_timeLastFrameBegan = timeThisFrameBegan;
-
-	g_theGame->Update( deltaSeconds );
+	if ( g_theInputSystem->GetXboxRightTriggerPulledStatus( 0 ) )
+	{
+		g_theGame->Update( deltaSeconds * 2.0f );
+	}
+	else if ( g_theInputSystem->GetXboxLeftTriggerPulledStatus( 0 ) )
+	{
+		g_theGame->Update( deltaSeconds / 2.0f );
+	}
+	else
+	{
+		g_theGame->Update( deltaSeconds );
+	}
 
 	UpdateEngineSubsystems( deltaSeconds );
 }
