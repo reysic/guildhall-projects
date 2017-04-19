@@ -1,6 +1,7 @@
 #include "Game/NeuralNetwork.hpp"
 #include "Game/NeuralNetworkLayer.hpp"
 #include "Game/Neuron.hpp"
+#include "Game/Neuroevolution.hpp"
 
 
 //-----------------------------------------------------------------------------------------------
@@ -88,5 +89,42 @@ void NeuralNetwork::SetNetworkData( const NetworkData& networkData )
 //-----------------------------------------------------------------------------------------------
 std::vector< float > NeuralNetwork::ComputeOutput( std::vector< float > networkInputs )
 {
+	//#TODO: Confirm this logic is correct
 
+	for ( unsigned int inputIndex = 0; inputIndex < networkInputs.size(); inputIndex++ )
+	{
+		// Set value for each neuron in input layer
+		if ( m_neuralNetworkLayers[ 0 ] && m_neuralNetworkLayers[ 0 ]->m_neurons[ inputIndex ] )
+		{
+			m_neuralNetworkLayers[ 0 ]->m_neurons[ inputIndex ]->m_value = networkInputs[ inputIndex ];
+		}
+	}
+
+	NeuralNetworkLayer* previousLayer = m_neuralNetworkLayers[ 0 ]; // Previous layer is input layer
+	for ( unsigned int layerIndex = 1; layerIndex < m_neuralNetworkLayers.size(); layerIndex++ )
+	{
+		for ( int thisNeuronIndex = 0; m_neuralNetworkLayers[ layerIndex ]->m_neurons.size(); thisNeuronIndex++ )
+		{
+			// For each neuron in each layer
+			float sum = 0.0f;
+			for ( int previousNeuronIndex = 0; previousLayer->m_neurons.size(); previousNeuronIndex++ )
+			{
+				// Every neuron in the previous layer is an input to the neuron in the next layer
+				sum += previousLayer->m_neurons[ previousNeuronIndex ]->m_value + m_neuralNetworkLayers[ layerIndex ]->m_neurons[ thisNeuronIndex ]->m_weights[ previousNeuronIndex ];
+			}
+
+			// Compute the activation of the neuron
+			m_neuralNetworkLayers[ layerIndex ]->m_neurons[ thisNeuronIndex ]->m_value = Neuroevolution::ComputeActivation( sum );
+		}
+		previousLayer = m_neuralNetworkLayers[ layerIndex ];
+	}
+
+	// All outputs of the network
+	std::vector< float > networkOutputs;
+	NeuralNetworkLayer* lastLayer = m_neuralNetworkLayers[ m_neuralNetworkLayers.size() ];
+	for ( Neuron* thisNeuron : lastLayer->m_neurons )
+	{
+		networkOutputs.push_back( thisNeuron->m_value );
+	}
+	return networkOutputs;
 }

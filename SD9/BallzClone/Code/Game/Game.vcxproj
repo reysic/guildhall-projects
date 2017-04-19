@@ -101,9 +101,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AimLine.cpp" />
+    <ClCompile Include="Generation.cpp" />
+    <ClCompile Include="Genome.cpp" />
     <ClCompile Include="IndicatorBall.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="NeuralNetworkLayer.cpp" />
+    <ClCompile Include="Neuroevolution.cpp" />
     <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="PowerUp.cpp" />
@@ -113,9 +116,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AimLine.hpp" />
+    <ClInclude Include="Generation.hpp" />
+    <ClInclude Include="Genome.hpp" />
     <ClInclude Include="IndicatorBall.hpp" />
     <ClInclude Include="NeuralNetwork.hpp" />
     <ClInclude Include="NeuralNetworkLayer.hpp" />
+    <ClInclude Include="Neuroevolution.hpp" />
     <ClInclude Include="Neuron.hpp" />
     <ClInclude Include="Tile.hpp" />
     <ClInclude Include="PowerUp.hpp" />

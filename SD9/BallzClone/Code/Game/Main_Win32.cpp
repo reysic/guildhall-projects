@@ -177,32 +177,51 @@ void Input()
 void Update()
 {
 	// Time code by Squirrel Eiserloh
-	const float MIN_SECONDS_PER_FRAME = ( 1.0f / 60.0f ) - 0.0001f;
+// 	const float MIN_SECONDS_PER_FRAME = ( 1.0f / 60.0f ) - 0.0001f;
+// 
+// 	static double s_timeLastFrameBegan = GetCurrentTimeSeconds(); // "static" local variables are initialized once, when first encountered, thus this function call only happens once
+// 
+// 	float deltaSeconds = static_cast< float >( GetCurrentTimeSeconds() - s_timeLastFrameBegan );
+// 	while ( deltaSeconds < MIN_SECONDS_PER_FRAME )
+// 	{
+// 		deltaSeconds = ( float ) GetCurrentTimeSeconds() - ( float ) s_timeLastFrameBegan;
+// 	}
+// 
+// 	s_timeLastFrameBegan = GetCurrentTimeSeconds();
 
-	static double s_timeLastFrameBegan = GetCurrentTimeSeconds(); // "static" local variables are initialized once, when first encountered, thus this function call only happens once
+	static double t = 0.0;
+	static const double dt = 0.01;
 
-	float deltaSeconds = static_cast< float >( GetCurrentTimeSeconds() - s_timeLastFrameBegan );
-	while ( deltaSeconds < MIN_SECONDS_PER_FRAME )
-	{
-		deltaSeconds = ( float ) GetCurrentTimeSeconds() - ( float ) s_timeLastFrameBegan;
-	}
+	static double currentTime = GetCurrentTimeSeconds();
+	static double accumulator = 0.0;
 
-	s_timeLastFrameBegan = GetCurrentTimeSeconds();
+	double newTime = GetCurrentTimeSeconds();
+	double frameTime = newTime - currentTime;
+	currentTime = newTime;
 
 	if ( g_theInputSystem->GetXboxRightTriggerPulledStatus( 0 ) )
 	{
-		g_theGame->Update( deltaSeconds * 2.0f );
+		accumulator += frameTime * 2.0f;
 	}
 	else if ( g_theInputSystem->GetXboxLeftTriggerPulledStatus( 0 ) )
 	{
-		g_theGame->Update( deltaSeconds / 2.0f );
+		accumulator += frameTime / 2.0f;
 	}
 	else
 	{
-		g_theGame->Update( deltaSeconds );
+		accumulator += frameTime;
 	}
 
-	UpdateEngineSubsystems( deltaSeconds );
+	while ( accumulator >= dt )
+	{
+
+		g_theGame->Update( dt );
+
+		UpdateEngineSubsystems( dt );
+
+		accumulator -= dt;
+		t += dt;
+	}
 }
 
 

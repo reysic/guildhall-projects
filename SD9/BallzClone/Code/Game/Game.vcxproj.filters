@@ -38,6 +38,15 @@
     <ClCompile Include="NeuralNetwork.cpp">
       <Filter>General</Filter>
     </ClCompile>
+    <ClCompile Include="Neuroevolution.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="Genome.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="Generation.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TheGame.hpp">
@@ -65,6 +74,15 @@
       <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="NeuralNetwork.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Neuroevolution.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Genome.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Generation.hpp">
       <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>
