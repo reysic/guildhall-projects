@@ -11,6 +11,8 @@ static const float MUTATION_RATE = 0.1f;
 static const float MUTATION_RANGE = 0.5f;
 static const float ELITISM = 0.2f;
 static const float RANDOM_BEHAVIOR = 0.2f;
+static const float POPULATION = 50.0f;
+static const float NUM_CHILDREN = 1;
 
 
 //-----------------------------------------------------------------------------------------------
@@ -87,5 +89,53 @@ std::vector< Genome* > Generation::BreedGenomes( Genome* firstGenome, Genome* se
 //-----------------------------------------------------------------------------------------------
 std::vector< Genome* > Generation::GenerateNextGeneration()
 {
+	std::vector< Genome* > nextGeneration;
 
+	for ( int genomeIndex = 0; genomeIndex < round( ELITISM * POPULATION ); genomeIndex++ )
+	{
+		if ( nextGeneration.size() < POPULATION )
+		{
+			nextGeneration.push_back( m_genomes[ genomeIndex ] );
+		}
+	}
+
+	// #TODO: Are we actually iterating over genomes here?
+	for ( int genomeIndex = 0; genomeIndex < round( RANDOM_BEHAVIOR * POPULATION ); genomeIndex++ )
+	{
+		// #TODO: Confirm we're just interested in the first genome
+		for ( float thisWeight : m_genomes[ 0 ]->m_network->GetNetworkData()->neuronalWeights )
+		{
+			thisWeight = GetRandomFloatNegativeOneToOne();
+		}
+		if ( nextGeneration.size() < POPULATION )
+		{
+			nextGeneration.push_back( m_genomes[ 0 ] );
+		}
+	}
+
+	int sentinel = 0;
+	while ( true )
+	{
+		// #TODO: Figure out what 'i' is
+		for ( int i = 0; i < sentinel; i++ )
+		{
+			// Create the children and push them into the nextGeneration vector
+			std::vector< Genome* > children = BreedGenomes( m_genomes[ i ], m_genomes[ sentinel ], NUM_CHILDREN > 0 ? NUM_CHILDREN : 1 );
+			for ( Genome* child : children )
+			{
+				nextGeneration.push_back( child );
+				if ( nextGeneration.size() >= POPULATION )
+				{
+					return nextGeneration;
+				}
+			}
+		}
+
+
+		sentinel++;
+		if ( sentinel >= ( m_genomes.size() - 1 ) )
+		{
+			sentinel = 0;
+		}
+	}
 }
