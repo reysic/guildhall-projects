@@ -11,7 +11,7 @@ class Genome
 public:
 	Genome( float score, NeuralNetwork* network );
 
-private:
+public:
 	float m_score;
 	NeuralNetwork* m_network;
 };

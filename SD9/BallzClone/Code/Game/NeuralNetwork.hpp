@@ -28,6 +28,6 @@ public:
 	void SetNetworkData( const NetworkData& networkData );
 	std::vector< float > ComputeOutput( std::vector< float > networkInputs );
 
-private:
+public:
 	std::vector< NeuralNetworkLayer* > m_neuralNetworkLayers;
 };
