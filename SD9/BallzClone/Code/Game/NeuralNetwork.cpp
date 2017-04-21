@@ -89,7 +89,7 @@ void NeuralNetwork::SetNetworkData( const NetworkData& networkData )
 //-----------------------------------------------------------------------------------------------
 std::vector< float > NeuralNetwork::ComputeOutput( std::vector< float > networkInputs )
 {
-	//#TODO: Confirm this logic is correct
+	// #TODO: Confirm this logic is correct
 
 	for ( unsigned int inputIndex = 0; inputIndex < networkInputs.size(); inputIndex++ )
 	{

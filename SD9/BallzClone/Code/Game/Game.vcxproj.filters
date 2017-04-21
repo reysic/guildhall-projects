@@ -47,6 +47,9 @@
     <ClCompile Include="Generation.cpp">
       <Filter>General</Filter>
     </ClCompile>
+    <ClCompile Include="Generations.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TheGame.hpp">
@@ -83,6 +86,9 @@
       <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="Generation.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Generations.hpp">
       <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>

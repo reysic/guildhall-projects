@@ -780,7 +780,7 @@ void TheGame::CheckTilesForCollisions()
 						}
 					}
 
-					//#TODO: Replace with specific corner bounce functions
+					// #TODO: Replace with specific corner bounce functions
 					//Top right corner (case 3)
 					else if ( distanceX > tileHalfWidth && distanceY > tileHalfHeight )
 					{

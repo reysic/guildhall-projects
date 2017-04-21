@@ -6,16 +6,6 @@
 
 
 //-----------------------------------------------------------------------------------------------
-static const float CROSSOVER_FACTOR = 0.5f;
-static const float MUTATION_RATE = 0.1f;
-static const float MUTATION_RANGE = 0.5f;
-static const float ELITISM = 0.2f;
-static const float RANDOM_BEHAVIOR = 0.2f;
-static const float POPULATION = 50.0f;
-static const float NUM_CHILDREN = 1;
-
-
-//-----------------------------------------------------------------------------------------------
 Generation::Generation()
 {
 }
@@ -87,15 +77,15 @@ std::vector< Genome* > Generation::BreedGenomes( Genome* firstGenome, Genome* se
 
 
 //-----------------------------------------------------------------------------------------------
-std::vector< Genome* > Generation::GenerateNextGeneration()
+Generation* Generation::GenerateNextGeneration()
 {
-	std::vector< Genome* > nextGeneration;
+	std::vector< Genome* > nextGenerationGenomes;
 
 	for ( int genomeIndex = 0; genomeIndex < round( ELITISM * POPULATION ); genomeIndex++ )
 	{
-		if ( nextGeneration.size() < POPULATION )
+		if ( nextGenerationGenomes.size() < POPULATION )
 		{
-			nextGeneration.push_back( m_genomes[ genomeIndex ] );
+			nextGenerationGenomes.push_back( m_genomes[ genomeIndex ] );
 		}
 	}
 
@@ -107,9 +97,9 @@ std::vector< Genome* > Generation::GenerateNextGeneration()
 		{
 			thisWeight = GetRandomFloatNegativeOneToOne();
 		}
-		if ( nextGeneration.size() < POPULATION )
+		if ( nextGenerationGenomes.size() < POPULATION )
 		{
-			nextGeneration.push_back( m_genomes[ 0 ] );
+			nextGenerationGenomes.push_back( m_genomes[ 0 ] );
 		}
 	}
 
@@ -123,9 +113,11 @@ std::vector< Genome* > Generation::GenerateNextGeneration()
 			std::vector< Genome* > children = BreedGenomes( m_genomes[ i ], m_genomes[ sentinel ], NUM_CHILDREN > 0 ? NUM_CHILDREN : 1 );
 			for ( Genome* child : children )
 			{
-				nextGeneration.push_back( child );
-				if ( nextGeneration.size() >= POPULATION )
+				nextGenerationGenomes.push_back( child );
+				if ( nextGenerationGenomes.size() >= POPULATION )
 				{
+					Generation* nextGeneration;
+					nextGeneration->m_genomes = nextGenerationGenomes;
 					return nextGeneration;
 				}
 			}

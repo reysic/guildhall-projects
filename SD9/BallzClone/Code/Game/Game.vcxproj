@@ -102,6 +102,7 @@
   <ItemGroup>
     <ClCompile Include="AimLine.cpp" />
     <ClCompile Include="Generation.cpp" />
+    <ClCompile Include="Generations.cpp" />
     <ClCompile Include="Genome.cpp" />
     <ClCompile Include="IndicatorBall.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
@@ -117,6 +118,7 @@
   <ItemGroup>
     <ClInclude Include="AimLine.hpp" />
     <ClInclude Include="Generation.hpp" />
+    <ClInclude Include="Generations.hpp" />
     <ClInclude Include="Genome.hpp" />
     <ClInclude Include="IndicatorBall.hpp" />
     <ClInclude Include="NeuralNetwork.hpp" />
