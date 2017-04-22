@@ -13,6 +13,7 @@
 #include "Game/Tile.hpp"
 #include "Game/IndicatorBall.hpp"
 #include "Game/AimLine.hpp"
+#include "Game/Neuroevolution.hpp"
 
 
 //-----------------------------------------------------------------------------------------------
@@ -61,6 +62,11 @@ TheGame::TheGame()
 		SpawnPlayerBall();
 	}
 	SpawnMore();
+
+	// Neuroevolution start
+	m_neuroevolution = new Neuroevolution();
+	m_generation = m_neuroevolution->CreateNextGeneration();
+	m_currentGeneration = 1;
 }
 
 
@@ -1192,6 +1198,7 @@ void TheGame::EndGame()
 void TheGame::Reset()
 {
 	m_turnNumber = 1;
+	m_currentGeneration++;
 
 	DeinitializeArrays();
 	InitializeArrays();

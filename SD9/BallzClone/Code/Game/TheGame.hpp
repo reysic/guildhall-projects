@@ -37,6 +37,7 @@ class Tile;
 class Emitter;
 class IndicatorBall;
 class AimLine;
+class Neuroevolution;
 
 
 //-----------------------------------------------------------------------------------------------
@@ -125,4 +126,9 @@ private:
 	Vector2			m_forwardDirection;
 	float			m_timeBetweenBallShotsSec;
 	float			m_timeLastBallShotSec;
+
+	// Neuroevolution Members
+	Neuroevolution*					m_neuroevolution;
+	std::vector< NeuralNetwork* >	m_generation;
+	int								m_currentGeneration;
 };

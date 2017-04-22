@@ -9,6 +9,7 @@ struct NetworkData;
 
 //-----------------------------------------------------------------------------------------------
 class Generation;
+class Genome;
 
 
 //-----------------------------------------------------------------------------------------------
@@ -20,7 +21,7 @@ public:
 
 	// Methods
 	std::vector< NetworkData* > CreateFirstGeneration();
-	Generation* CreateNextGeneration();
+	std::vector< NetworkData* > CreateNextGeneration();
 	void AddGenome( Genome* genome );
 
 public:
