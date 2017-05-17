@@ -13,15 +13,14 @@ enum GameState
 
 
 //-----------------------------------------------------------------------------------------------
-const int MAX_PLAYER_BALL_COUNT = 100;
-const int MAX_TILE_COUNT = 54;
-const int MAX_POWER_UP_COUNT = 54;
-const int MAX_EMITTER_COUNT = 54;
-const int MAX_INDICATOR_BALL_COUNT = 54;
+const int MAX_PLAYER_BALL_COUNT = 1000;
+const int MAX_TILE_COUNT = 63;
+const int MAX_POWER_UP_COUNT = 63;
+const int MAX_EMITTER_COUNT = 63;
+const int MAX_INDICATOR_BALL_COUNT = 63;
 const int NUM_STARTING_BALLS = 1;
 const float PLAYER_BALL_SPEED = 1000.0f;
-const float TILE_SPAWN_CHANCE = 0.5f;
-const float POWER_UP_SPAWN_CHANCE = 0.1f;
+const float TILE_SPAWN_CHANCE = 0.55f;
 const float PLAYER_BALL_SHOOT_RATE_BALLS_PER_SEC = 10.0f;
 const Vector2 PLAYER_BALL_INITIAL_POSITION( 350.0f, 10.0f );
 
@@ -38,6 +37,8 @@ class Emitter;
 class IndicatorBall;
 class AimLine;
 class Neuroevolution;
+class NeuralNetwork;
+class AIPlayer;
 
 
 //-----------------------------------------------------------------------------------------------
@@ -83,7 +84,7 @@ public:
 	void HitTile( Tile* tile );
 	void CheckForTileDestroy( Tile* tile );
 	void CheckPowerUpsForCollisions();
-	void DestroyPowerUp( PowerUp* powerUp );
+	void DestroyPowerUp( PowerUp* powerUp, bool spawnIndicatorBall );
 	void SpawnPowerUpIndicatorBall( const Vector2& spawnLocation );
 	void AdvanceTurn();
 	void CondenseBalls();
@@ -96,7 +97,7 @@ public:
 	void Reset();
 	bool AreAllPlayerBallsNotMoving() const;
 	bool IsAPlayerBallNotMoving();
-	void ShootPlayerBall();
+	void ShootPlayerBall( const Vector2& forwardDirection );
 	int GetNumBalls() const;
 	int GetNumMovingBalls() const;
 	Vector2 SetNewPlayerBallStartingPosition( const Vector2& positionOfBallAsking );
@@ -104,6 +105,14 @@ public:
 	// Accessors & Mutators
 	GameState GetGameState() const { return m_currentState; }
 	bool SetGameState( GameState newState );
+
+	// Neuroevolution Methods
+	std::vector< float > GetNeuroevolutionInput();
+	float GetInputContentsOfGridCell( int x, int y );
+
+public:
+	// Neuroevolution Members
+	bool m_aiIsPlaying;
 
 private:
 	// Methods
@@ -131,4 +140,8 @@ private:
 	Neuroevolution*					m_neuroevolution;
 	std::vector< NeuralNetwork* >	m_generation;
 	int								m_currentGeneration;
+	Vector2							m_aiShotDirection;
+	std::vector< float >			m_neuroevolutionInput;
+	std::vector< float >			m_neuroevolutionOutput;
+	int								m_genomeIteration;
 };

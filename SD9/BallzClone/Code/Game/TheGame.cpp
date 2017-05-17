@@ -14,6 +14,8 @@
 #include "Game/IndicatorBall.hpp"
 #include "Game/AimLine.hpp"
 #include "Game/Neuroevolution.hpp"
+#include "Game/NeuralNetwork.hpp"
+#include "Game/Generation.hpp"
 
 
 //-----------------------------------------------------------------------------------------------
@@ -67,6 +69,9 @@ TheGame::TheGame()
 	m_neuroevolution = new Neuroevolution();
 	m_generation = m_neuroevolution->CreateNextGeneration();
 	m_currentGeneration = 1;
+	m_genomeIteration = 0;
+	m_aiShotDirection = Vector2::ZERO;
+	m_aiIsPlaying = true;
 }
 
 
@@ -84,7 +89,64 @@ TheGame::~TheGame()
 void TheGame::Input()
 {
 	HandleKeyboardInput();
-	HandleControllerInput();
+
+	if ( !m_aiIsPlaying )
+	{
+		HandleControllerInput();
+	}
+	else
+	{
+
+		if ( !m_canShootBall )
+		{
+			// Get the neuroevolution input for the current board state
+			m_neuroevolutionInput = GetNeuroevolutionInput();
+
+			// Get the neuroevolution output for the current board state
+			m_neuroevolutionOutput = m_generation[ 0 ]->ComputeOutput( m_neuroevolutionInput );
+
+			if ( m_neuroevolutionOutput.size() > 0 )
+			{
+				int highestIndex = -1;
+				float highestValue = -1;
+				for ( unsigned int vectorIndex = 0; vectorIndex < m_neuroevolutionOutput.size(); vectorIndex++ )
+				{
+					if ( m_neuroevolutionOutput[ vectorIndex ] >= highestValue )
+					{
+						highestIndex = vectorIndex;
+						highestValue = m_neuroevolutionOutput[ vectorIndex ];
+					}
+				}
+				float shotDegrees = RangeMap( highestValue, 0.0f, 1.0, 0.0f, 180.0f );
+				float shotRadians = ConvertDegreesToRadians( shotDegrees );
+
+				m_aiShotDirection = Vector2( cos( shotRadians ), sin( shotRadians ) );
+			}
+			else
+			{
+				m_aiShotDirection = Vector2::ZERO;
+			}
+		}
+
+		if ( !g_turnIsActive )
+		{
+			m_canShootBall = true;
+		}
+		else if ( m_canShootBall && !IsAPlayerBallNotMoving() || g_turnIsActive )
+		{
+			m_canShootBall = false;
+		}
+
+		if ( ( GetNumBalls() == GetNumMovingBalls() ) && !g_turnIsActive )
+		{
+			g_turnIsActive = true;
+		}
+
+		if ( g_turnIsActive && AreAllPlayerBallsNotMoving() )
+		{
+			g_turnIsActive = false;
+		}
+	}
 }
 
 
@@ -204,13 +266,32 @@ void TheGame::Update( float deltaSeconds )
 
 	g_loopCounterAge += deltaSeconds;
 
+
+	/////////////////////////////////////////////////////////////////////////////////////
+	// Get the AI from the main menu to the playing state
+	if ( m_aiIsPlaying )
+	{
+		if ( GetGameState() == STATE_MAIN_MENU )
+		{
+			SetGameState( STATE_PLAYING );
+		}
+	}
+	/////////////////////////////////////////////////////////////////////////////////////
+
 	if ( m_canShootBall && ( g_numBallsShotThisTurn < GetNumBalls() ) )
 	{
 		if ( IsAPlayerBallNotMoving() )
 		{
 			if ( !m_waitToShootPlayerBall )
 			{
-				ShootPlayerBall();
+				if ( !m_aiIsPlaying )
+				{
+					ShootPlayerBall( m_forwardDirection );
+				}
+				else
+				{
+					ShootPlayerBall( m_aiShotDirection );
+				}
 			}
 		}
 	}
@@ -436,6 +517,16 @@ void TheGame::RenderPlayingState() const
 	Vector2 highestTurnNumberTextDrawPosition = Vector2( 60.0f - ( highestTurnNumberTextWidth / 2.0f ), 835.0f - ( highestTurnNumberTextCellHeight / 2.0f ) );
 	g_theRenderer->DrawText2D( highestTurnNumberTextDrawPosition, std::to_string( m_highestTurnNumber ), highestTurnNumberTextCellHeight, Rgba::WHITE, fixedFont );
 
+	// "Gen"
+	float genTestCellHeight = 15.0f;
+	g_theRenderer->DrawText2D( Vector2( 625.0f, 860.0f ), "Gen", genTestCellHeight, Rgba::WHITE, fixedFont );
+
+	// "Gen Number"
+	float genNumberTextCellHeight = 15.0f;
+	float genNumberTextWidth = BitmapFont::GetTextWidth( std::to_string( m_currentGeneration ), genNumberTextCellHeight );
+	Vector2 genNumberTextDrawPosition = Vector2( 650.0f - ( genNumberTextWidth / 2.0f ), 835.0f - ( genNumberTextCellHeight / 2.0f ) );
+	g_theRenderer->DrawText2D( genNumberTextDrawPosition, std::to_string( m_currentGeneration ), genNumberTextCellHeight, Rgba::WHITE, fixedFont );
+
 	// "Ball Count"
 	if ( AreAllPlayerBallsNotMoving() )
 	{
@@ -510,7 +601,30 @@ void TheGame::RenderDebugInfo() const
 
 	g_theRenderer->DrawText2D( Vector2( 0.0f, 880.0f ), "Update():" + Stringf( "%.02f", ( g_updateLoopEnd - g_updateLoopStart ) ) + "ms", 15.0f, Rgba::GREEN, fixedFont );
 	g_theRenderer->DrawText2D( Vector2( 300.0f, 880.0f ), "Render():" + Stringf( "%.02f", ( abs( g_renderLoopEnd - g_renderLoopStart ) ) ) + "ms", 15.0f, Rgba::GREEN, fixedFont );
-	g_theRenderer->DrawText2D( Vector2( 600.0f, 880.0f ), fpsString, 15.0f, Rgba::GREEN, fixedFont );
+	g_theRenderer->DrawText2D( Vector2( 595.0f, 880.0f ), fpsString, 15.0f, Rgba::GREEN, fixedFont );
+
+
+	// Neuroevolution input
+	if ( m_neuroevolutionInput.size() > 0 )
+	{
+		float yPos = 780.0f;
+		for ( unsigned int inputIndex = 0; inputIndex < m_neuroevolutionInput.size(); inputIndex++ )
+		{
+			g_theRenderer->DrawText2D( Vector2( 0.0f, yPos ), Stringf( "%.02f", m_neuroevolutionInput[ inputIndex ] ), 10.0f, Rgba::GREEN, fixedFont );
+			yPos -= 10.0f;
+		}
+	}
+
+	// Neuroevolution output
+	if ( m_neuroevolutionOutput.size() > 0 )
+	{
+		float yPos = 780.0f;
+		for ( unsigned int outputIndex = 0; outputIndex < m_neuroevolutionOutput.size(); outputIndex++ )
+		{
+			g_theRenderer->DrawText2D( Vector2( 60.0f, yPos ), Stringf( "%.02f", m_neuroevolutionOutput[ outputIndex ] ), 10.0f, Rgba::GREEN, fixedFont );
+			yPos -= 10.0f;
+		}
+	}
 }
 
 
@@ -560,17 +674,14 @@ void TheGame::SpawnPlayerBall()
 void TheGame::SpawnMore()
 {
 	int tilesSpawned = 0;
+	int powerUpX = GetRandomIntInRange( 0, 6 );
+	SpawnPowerUp( powerUpX );
 
 	for ( int spawnPositionX = 0; spawnPositionX <= 6; ++spawnPositionX )
 	{
-		bool shouldSpawnPowerUp = GetRandomChance( POWER_UP_SPAWN_CHANCE );
 		bool shouldSpawnTile = GetRandomChance( TILE_SPAWN_CHANCE );
 
-		if ( shouldSpawnPowerUp )
-		{
-			SpawnPowerUp( spawnPositionX );
-		}
-		else if ( shouldSpawnTile && tilesSpawned < 7)
+		if ( shouldSpawnTile && tilesSpawned < 6 && spawnPositionX != powerUpX )
 		{
 			SpawnTile( spawnPositionX );
 			tilesSpawned++;
@@ -595,7 +706,14 @@ void TheGame::SpawnTile( int xPosition )
 			}
 			else
 			{
-				randomTileLife = GetRandomIntInRange( m_turnNumber, m_turnNumber * 2 );
+				if ( GetRandomChance( 0.2f ) )
+				{
+					randomTileLife = m_turnNumber * 2;
+				}
+				else
+				{
+					randomTileLife = m_turnNumber;
+				}
 			}
 			m_tiles[ tileIndex ] = new Tile( randomTileLife, IntVector2( xPosition, 7 ) );
 			break;
@@ -1006,7 +1124,7 @@ void TheGame::CheckPowerUpsForCollisions()
 						if ( DoDiscsOverlap( thisBall->m_position, thisBall->m_radius, 
 							m_powerUps[ powerUpIndex ]->m_worldPosition, m_powerUps[ powerUpIndex ]->m_radius ) )
 						{
-							DestroyPowerUp( m_powerUps[ powerUpIndex ] );
+							DestroyPowerUp( m_powerUps[ powerUpIndex ], true );
 							g_ballsToSpawnAtEndOfTurn++;
 						}
 					}
@@ -1018,13 +1136,16 @@ void TheGame::CheckPowerUpsForCollisions()
 
 
 //-----------------------------------------------------------------------------------------------
-void TheGame::DestroyPowerUp( PowerUp* powerUp )
+void TheGame::DestroyPowerUp( PowerUp* powerUp, bool spawnIndicatorBall )
 {
 	for ( int powerUpIndex = 0; powerUpIndex < MAX_POWER_UP_COUNT; ++powerUpIndex )
 	{
 		if ( m_powerUps[ powerUpIndex ] == powerUp )
 		{
-			SpawnPowerUpIndicatorBall( m_powerUps[ powerUpIndex ]->m_worldPosition );
+			if ( spawnIndicatorBall )
+			{
+				SpawnPowerUpIndicatorBall( m_powerUps[ powerUpIndex ]->m_worldPosition );
+			}
 			delete m_powerUps[ powerUpIndex ];
 			m_powerUps[ powerUpIndex ] = nullptr;
 			return;
@@ -1175,7 +1296,7 @@ void TheGame::AdvancePowerUps()
 
 			if ( newGridPosition.y < 1 )
 			{
-				DestroyPowerUp( m_powerUps[ powerUpIndex ] );
+				DestroyPowerUp( m_powerUps[ powerUpIndex ], false );
 				return;
 			}
 
@@ -1197,8 +1318,26 @@ void TheGame::EndGame()
 //-----------------------------------------------------------------------------------------------
 void TheGame::Reset()
 {
+	/////////////////////////////////////////////////////////////////////////////////////
+	// Save off score for this network before advancing to next game
+	m_neuroevolution->NetworkScore( ( float ) m_turnNumber, m_generation[ 0 ] );
+	/////////////////////////////////////////////////////////////////////////////////////
+
+	m_genomeIteration++;
+
+	if ( ( float ) m_genomeIteration == POPULATION )
+	{
+		m_genomeIteration = 0;
+
+		/////////////////////////////////////////////////////////////////////////////////////
+		// Create next generation before advancing to next game
+		m_generation = m_neuroevolution->CreateNextGeneration();
+		/////////////////////////////////////////////////////////////////////////////////////
+
+		m_currentGeneration++;
+	}
+
 	m_turnNumber = 1;
-	m_currentGeneration++;
 
 	DeinitializeArrays();
 	InitializeArrays();
@@ -1246,14 +1385,14 @@ bool TheGame::IsAPlayerBallNotMoving()
 
 
 //-----------------------------------------------------------------------------------------------
-void TheGame::ShootPlayerBall()
+void TheGame::ShootPlayerBall( const Vector2& forwardDirection )
 {
 	for ( int playerBallIndex = 0; playerBallIndex < MAX_PLAYER_BALL_COUNT; ++playerBallIndex )
 	{
 		PlayerBall* thisBall = m_playerBalls[ playerBallIndex ];
 		if ( thisBall != nullptr && !thisBall->m_hasBeenShotThisTurn )
 		{
-			thisBall->m_velocity = m_forwardDirection * PLAYER_BALL_SPEED;
+			thisBall->m_velocity = forwardDirection * PLAYER_BALL_SPEED;
 			thisBall->m_hasBeenShotThisTurn = true;
 			m_waitToShootPlayerBall = true;
 			m_timeLastBallShotSec = ( float ) GetCurrentTimeSeconds();
@@ -1336,6 +1475,85 @@ bool TheGame::SetGameState( GameState newState )
 	}
 
 	return didChange;
+}
+
+
+//-----------------------------------------------------------------------------------------------
+std::vector< float > TheGame::GetNeuroevolutionInput()
+{
+	std::vector< float > neuroevolutionInput;
+
+	// 0 0 0 0 0 0 0
+	// 0 0 0 0 0 0 0
+	// 0 0 0 0 0 0 0
+	// 0 0 0 0 0 0 0
+	// 0 0 0 0 0 0 0
+	// 0 0 0 0 0 0 0
+	// 0 0 0 0 0 0 0
+	// 0 0 0 0 0 0 0
+	// 0 0 0 0 0 0 0
+
+	for ( int x = 0; x < 7; x++ )
+	{
+		for ( int y = 0; y < 9; y++ )
+		{
+			// Check the contents of each grid location and input the corresponding integer
+			// into the vector
+			neuroevolutionInput.push_back( GetInputContentsOfGridCell( x, y ) );
+		}
+	}
+
+	// Also push the position of the player ball
+	neuroevolutionInput.push_back( RangeMapZeroToOne( m_playerBalls[ 0 ]->m_position.x, 0.0f, 700.0f ) );
+
+	// Also push the number of player balls
+	neuroevolutionInput.push_back( RangeMapZeroToOne( ( float ) GetNumBalls(), 0.0f, 100.0f ) );
+
+	return neuroevolutionInput;
+}
+
+
+//-----------------------------------------------------------------------------------------------
+float TheGame::GetInputContentsOfGridCell( int x, int y )
+{
+	float inputContents = 0.0f; // Means nothing in the grid cell
+
+	// Iterate over tiles, finding if there is one at row,col
+	for ( int tileIndex = 0; tileIndex < MAX_TILE_COUNT; ++tileIndex )
+	{
+		if ( m_tiles[ tileIndex ] != nullptr )
+		{
+			IntVector2 currentGridPosition = m_tiles[ tileIndex ]->m_gridPosition;
+			if ( currentGridPosition.x == x && currentGridPosition.y == y )
+			{
+				if ( m_tiles[ tileIndex ]->m_numHitsRemaining > 30 )
+				{
+					inputContents = 1.0f;
+				}
+				else
+				{
+					inputContents = RangeMap( ( float ) m_tiles[ tileIndex ]->m_numHitsRemaining, 1, 30, 0.2f, 1.0f );
+				}
+				return inputContents;
+			}
+		}
+	}
+
+	// Iterate over power ups, finding if there is one at row,col
+	for ( int powerUpIndex = 0; powerUpIndex < MAX_POWER_UP_COUNT; ++powerUpIndex )
+	{
+		if ( m_powerUps[ powerUpIndex ] != nullptr )
+		{
+			IntVector2 currentGridPosition = m_powerUps[ powerUpIndex ]->m_gridPosition;
+			if ( currentGridPosition.x == x && currentGridPosition.y == y )
+			{
+				inputContents = 0.1f;
+				return inputContents;
+			}
+		}
+	}
+
+	return inputContents;
 }
 
 

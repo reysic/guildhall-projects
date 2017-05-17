@@ -199,25 +199,32 @@ void Update()
 	double frameTime = newTime - currentTime;
 	currentTime = newTime;
 
-	if ( g_theInputSystem->GetXboxRightTriggerPulledStatus( 0 ) )
+	if ( !g_theGame->m_aiIsPlaying )
 	{
-		accumulator += frameTime * 2.0f;
-	}
-	else if ( g_theInputSystem->GetXboxLeftTriggerPulledStatus( 0 ) )
-	{
-		accumulator += frameTime / 2.0f;
+		if ( g_theInputSystem->GetXboxRightTriggerPulledStatus( 0 ) )
+		{
+			accumulator += frameTime * 2.0f;
+		}
+		else if ( g_theInputSystem->GetXboxLeftTriggerPulledStatus( 0 ) )
+		{
+			accumulator += frameTime / 2.0f;
+		}
+		else
+		{
+			accumulator += frameTime;
+		}
 	}
 	else
 	{
-		accumulator += frameTime;
+		accumulator += frameTime * 4.0f;
 	}
 
 	while ( accumulator >= dt )
 	{
 
-		g_theGame->Update( dt );
+		g_theGame->Update( ( float ) dt );
 
-		UpdateEngineSubsystems( dt );
+		UpdateEngineSubsystems( ( float ) dt );
 
 		accumulator -= dt;
 		t += dt;

@@ -20,8 +20,8 @@ public:
 	Generations();
 
 	// Methods
-	std::vector< NetworkData* > CreateFirstGeneration();
-	std::vector< NetworkData* > CreateNextGeneration();
+	std::vector< NetworkData > CreateFirstGeneration();
+	std::vector< NetworkData > CreateNextGeneration();
 	void AddGenome( Genome* genome );
 
 public:

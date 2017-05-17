@@ -40,18 +40,18 @@ void NeuralNetwork::GeneratePerceptron( int numNeuronsInInputLayer, std::vector<
 
 
 //-----------------------------------------------------------------------------------------------
-NetworkData* NeuralNetwork::GetNetworkData() const
+NetworkData NeuralNetwork::GetNetworkData() const
 {
-	NetworkData* networkData = new NetworkData();
+	NetworkData networkData;
 
 	for ( NeuralNetworkLayer* thisLayer : m_neuralNetworkLayers )
 	{
-		networkData->numNeuronsPerLayer.push_back( thisLayer->m_neurons.size() );
+		networkData.numNeuronsPerLayer.push_back( thisLayer->m_neurons.size() );
 		for ( Neuron* thisNeuron : thisLayer->m_neurons )
 		{
 			for ( float thisNeuronWeight : thisNeuron->m_weights )
 			{
-				networkData->neuronalWeights.push_back( thisNeuronWeight );
+				networkData.neuronalWeights.push_back( thisNeuronWeight );
 			}
 		}
 	}
@@ -82,6 +82,9 @@ void NeuralNetwork::SetNetworkData( const NetworkData& networkData )
 				layerIDWeights++;
 			}
 		}
+		numNeuronsInPreviousLayer = numNeuronsInThisLayer;
+		layerID++;
+		m_neuralNetworkLayers.push_back( layer );
 	}
 }
 
@@ -103,14 +106,14 @@ std::vector< float > NeuralNetwork::ComputeOutput( std::vector< float > networkI
 	NeuralNetworkLayer* previousLayer = m_neuralNetworkLayers[ 0 ]; // Previous layer is input layer
 	for ( unsigned int layerIndex = 1; layerIndex < m_neuralNetworkLayers.size(); layerIndex++ )
 	{
-		for ( int thisNeuronIndex = 0; m_neuralNetworkLayers[ layerIndex ]->m_neurons.size(); thisNeuronIndex++ )
+		for ( int thisNeuronIndex = 0; thisNeuronIndex < m_neuralNetworkLayers[ layerIndex ]->m_neurons.size(); thisNeuronIndex++ )
 		{
 			// For each neuron in each layer
 			float sum = 0.0f;
-			for ( int previousNeuronIndex = 0; previousLayer->m_neurons.size(); previousNeuronIndex++ )
+			for ( int previousNeuronIndex = 0; previousNeuronIndex < previousLayer->m_neurons.size(); previousNeuronIndex++ )
 			{
 				// Every neuron in the previous layer is an input to the neuron in the next layer
-				sum += previousLayer->m_neurons[ previousNeuronIndex ]->m_value + m_neuralNetworkLayers[ layerIndex ]->m_neurons[ thisNeuronIndex ]->m_weights[ previousNeuronIndex ];
+				sum += previousLayer->m_neurons[ previousNeuronIndex ]->m_value * m_neuralNetworkLayers[ layerIndex ]->m_neurons[ thisNeuronIndex ]->m_weights[ previousNeuronIndex ];
 			}
 
 			// Compute the activation of the neuron
@@ -121,7 +124,7 @@ std::vector< float > NeuralNetwork::ComputeOutput( std::vector< float > networkI
 
 	// All outputs of the network
 	std::vector< float > networkOutputs;
-	NeuralNetworkLayer* lastLayer = m_neuralNetworkLayers[ m_neuralNetworkLayers.size() ];
+	NeuralNetworkLayer* lastLayer = m_neuralNetworkLayers[ m_neuralNetworkLayers.size() - 1 ];
 	for ( Neuron* thisNeuron : lastLayer->m_neurons )
 	{
 		networkOutputs.push_back( thisNeuron->m_value );

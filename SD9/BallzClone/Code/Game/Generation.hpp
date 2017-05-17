@@ -9,8 +9,12 @@ static const float MUTATION_RATE = 0.1f;
 static const float MUTATION_RANGE = 0.5f;
 static const float ELITISM = 0.2f;
 static const float RANDOM_BEHAVIOR = 0.2f;
-static const float POPULATION = 50.0f;
+static const float POPULATION = 10.0f;
 static const float NUM_CHILDREN = 1;
+
+
+//-----------------------------------------------------------------------------------------------
+struct NetworkData;
 
 
 //-----------------------------------------------------------------------------------------------
@@ -27,7 +31,7 @@ public:
 	// Methods
 	void AddGenome( Genome* genome );
 	std::vector< Genome* > BreedGenomes( Genome* firstGenome, Genome* secondGenome, int numChildren );
-	Generation* GenerateNextGeneration();
+	std::vector< NetworkData > GenerateNextGeneration();
 
 public:
 	std::vector< Genome* > m_genomes;

@@ -101,6 +101,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AimLine.cpp" />
+    <ClCompile Include="AIPlayer.cpp" />
     <ClCompile Include="Generation.cpp" />
     <ClCompile Include="Generations.cpp" />
     <ClCompile Include="Genome.cpp" />
@@ -117,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AimLine.hpp" />
+    <ClInclude Include="AIPlayer.hpp" />
     <ClInclude Include="Generation.hpp" />
     <ClInclude Include="Generations.hpp" />
     <ClInclude Include="Genome.hpp" />

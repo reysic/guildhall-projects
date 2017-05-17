@@ -37,7 +37,7 @@ void Neuroevolution::Restart()
 std::vector< NeuralNetwork* > Neuroevolution::CreateNextGeneration()
 {
 	// Vector of data to construct neural networks for this generation
-	std::vector< NetworkData* > networkDataForThisGeneration;
+	std::vector< NetworkData > networkDataForThisGeneration;
 
 	if ( m_generations->m_generations.size() == 0 )
 	{
@@ -52,11 +52,14 @@ std::vector< NeuralNetwork* > Neuroevolution::CreateNextGeneration()
 
 	// Vector of neural networks for this generation, returned at end
 	std::vector< NeuralNetwork* > neuralNetworksForThisGeneration;
-	for ( NetworkData* thisNetworkData : networkDataForThisGeneration )
+	for ( NetworkData thisNetworkData : networkDataForThisGeneration )
 	{
 		NeuralNetwork* thisNeuralNetwork = new NeuralNetwork();
-		thisNeuralNetwork->SetNetworkData( networkDataForThisGeneration );
+		thisNeuralNetwork->SetNetworkData( thisNetworkData );
+		neuralNetworksForThisGeneration.push_back( thisNeuralNetwork );
 	}
+
+	return neuralNetworksForThisGeneration;
 }
 
 

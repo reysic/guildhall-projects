@@ -24,7 +24,7 @@ public:
 
 	// Methods
 	void GeneratePerceptron( int numNeuronsInInputLayer, std::vector< int > numNeuronsInHiddenLayers, int numNeuronsInOutputLayer );
-	NetworkData* GetNetworkData() const;
+	NetworkData GetNetworkData() const;
 	void SetNetworkData( const NetworkData& networkData );
 	std::vector< float > ComputeOutput( std::vector< float > networkInputs );
 

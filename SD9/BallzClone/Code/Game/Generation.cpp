@@ -44,28 +44,28 @@ std::vector< Genome* > Generation::BreedGenomes( Genome* firstGenome, Genome* se
 	// #TODO: Confirm that this should be returning a std::vector< Genome* > and not a flat array
 	std::vector< Genome* > children;
 
-	NetworkData* secondGenomeNetworkData = secondGenome->m_network->GetNetworkData();
+	NetworkData secondGenomeNetworkData = secondGenome->m_network->GetNetworkData();
 
 	for ( int childIndex = 0; childIndex < numChildren; childIndex++ )
 	{
 		Genome* child = new Genome( firstGenome->m_score, firstGenome->m_network );
-		NetworkData* childNetworkData = child->m_network->GetNetworkData();
+		NetworkData childNetworkData = child->m_network->GetNetworkData();
 
-		for ( unsigned int weightIndex = 0; weightIndex < secondGenomeNetworkData->neuronalWeights.size(); weightIndex++ )
+		for ( unsigned int weightIndex = 0; weightIndex < secondGenomeNetworkData.neuronalWeights.size(); weightIndex++ )
 		{
 			// Genetic crossover
 			if ( GetRandomChance( CROSSOVER_FACTOR ) )
 			{
-				childNetworkData->neuronalWeights[ weightIndex ] = secondGenomeNetworkData->neuronalWeights[ weightIndex ];
+				childNetworkData.neuronalWeights[ weightIndex ] = secondGenomeNetworkData.neuronalWeights[ weightIndex ];
 			}
 		}
 
-		for ( unsigned int weightIndex = 0; weightIndex < childNetworkData->neuronalWeights.size(); weightIndex++ )
+		for ( unsigned int weightIndex = 0; weightIndex < childNetworkData.neuronalWeights.size(); weightIndex++ )
 		{
 			// Mutation
 			if ( GetRandomFloatZeroToOne() <= MUTATION_RATE )
 			{
-				childNetworkData->neuronalWeights[ weightIndex ] += GetRandomFloatZeroToOne() * MUTATION_RANGE * 2.0f - MUTATION_RANGE;
+				childNetworkData.neuronalWeights[ weightIndex ] += GetRandomFloatZeroToOne() * MUTATION_RANGE * 2.0f - MUTATION_RANGE;
 			}
 		}
 
@@ -77,15 +77,15 @@ std::vector< Genome* > Generation::BreedGenomes( Genome* firstGenome, Genome* se
 
 
 //-----------------------------------------------------------------------------------------------
-Generation* Generation::GenerateNextGeneration()
+std::vector< NetworkData > Generation::GenerateNextGeneration()
 {
-	std::vector< Genome* > nextGenerationGenomes;
+	std::vector< NetworkData > nextGenerationNetworkData;
 
 	for ( int genomeIndex = 0; genomeIndex < round( ELITISM * POPULATION ); genomeIndex++ )
 	{
-		if ( nextGenerationGenomes.size() < POPULATION )
+		if ( nextGenerationNetworkData.size() < POPULATION )
 		{
-			nextGenerationGenomes.push_back( m_genomes[ genomeIndex ] );
+			nextGenerationNetworkData.push_back( m_genomes[ genomeIndex ]->m_network->GetNetworkData() );
 		}
 	}
 
@@ -93,13 +93,13 @@ Generation* Generation::GenerateNextGeneration()
 	for ( int genomeIndex = 0; genomeIndex < round( RANDOM_BEHAVIOR * POPULATION ); genomeIndex++ )
 	{
 		// #TODO: Confirm we're just interested in the first genome
-		for ( float thisWeight : m_genomes[ 0 ]->m_network->GetNetworkData()->neuronalWeights )
+		for ( float thisWeight : m_genomes[ 0 ]->m_network->GetNetworkData().neuronalWeights )
 		{
 			thisWeight = GetRandomFloatNegativeOneToOne();
 		}
-		if ( nextGenerationGenomes.size() < POPULATION )
+		if ( nextGenerationNetworkData.size() < POPULATION )
 		{
-			nextGenerationGenomes.push_back( m_genomes[ 0 ] );
+			nextGenerationNetworkData.push_back( m_genomes[ 0 ]->m_network->GetNetworkData() );
 		}
 	}
 
@@ -113,16 +113,13 @@ Generation* Generation::GenerateNextGeneration()
 			std::vector< Genome* > children = BreedGenomes( m_genomes[ i ], m_genomes[ sentinel ], NUM_CHILDREN > 0 ? NUM_CHILDREN : 1 );
 			for ( Genome* child : children )
 			{
-				nextGenerationGenomes.push_back( child );
-				if ( nextGenerationGenomes.size() >= POPULATION )
+				nextGenerationNetworkData.push_back( child->m_network->GetNetworkData() );
+				if ( nextGenerationNetworkData.size() >= POPULATION )
 				{
-					Generation* nextGeneration;
-					nextGeneration->m_genomes = nextGenerationGenomes;
-					return nextGeneration;
+					return nextGenerationNetworkData;
 				}
 			}
 		}
-
 
 		sentinel++;
 		if ( sentinel >= ( m_genomes.size() - 1 ) )

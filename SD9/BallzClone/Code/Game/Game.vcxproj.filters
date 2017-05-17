@@ -50,6 +50,9 @@
     <ClCompile Include="Generations.cpp">
       <Filter>General</Filter>
     </ClCompile>
+    <ClCompile Include="AIPlayer.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TheGame.hpp">
@@ -89,6 +92,9 @@
       <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="Generations.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="AIPlayer.hpp">
       <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>

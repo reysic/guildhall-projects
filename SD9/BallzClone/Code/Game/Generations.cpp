@@ -12,17 +12,17 @@ Generations::Generations()
 
 
 //-----------------------------------------------------------------------------------------------
-std::vector< NetworkData* > Generations::CreateFirstGeneration()
+std::vector< NetworkData > Generations::CreateFirstGeneration()
 {
-	std::vector< NetworkData* > out;
+	std::vector< NetworkData > out;
 
 	for ( int populationIndex = 0; populationIndex < POPULATION; populationIndex++ )
 	{
 		NeuralNetwork* network = new NeuralNetwork();
 		std::vector< int > numNeuronsInHiddenLayers;
-		numNeuronsInHiddenLayers.push_back( 1 );
-		// #TODO: Confirm second argument is correct
-		network->GeneratePerceptron( 1, numNeuronsInHiddenLayers, 1 );
+		numNeuronsInHiddenLayers.push_back( 33 ); // Mean of neurons in input and output layers
+		// #TODO: Make these parameters constants
+		network->GeneratePerceptron( 65, numNeuronsInHiddenLayers, 1 );
 		out.push_back( network->GetNetworkData() );
 	}
 
@@ -32,9 +32,9 @@ std::vector< NetworkData* > Generations::CreateFirstGeneration()
 
 
 //-----------------------------------------------------------------------------------------------
-std::vector< NetworkData* > Generations::CreateNextGeneration()
+std::vector< NetworkData > Generations::CreateNextGeneration()
 {
-	std::vector< NetworkData* > out;
+	std::vector< NetworkData > out;
 
 	if ( m_generations.size() == 0 )
 	{
@@ -43,7 +43,7 @@ std::vector< NetworkData* > Generations::CreateNextGeneration()
 		//return nullptr;
 	}
 
-	Generation* nextGeneration = m_generations[ m_generations.size() - 1]->GenerateNextGeneration();
+	out = m_generations[ m_generations.size() - 1 ]->GenerateNextGeneration();
 	// #TODO: Is this what we should be adding to the vector?
 	m_generations.push_back( new Generation() );
 	//return nextGeneration;
