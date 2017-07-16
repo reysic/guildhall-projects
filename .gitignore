@@ -60,3 +60,7 @@ SD8/UnrealFlocking/Saved/
 *.iobj
 *.ipdb
 *.opendb
+*.db-shm
+*.db-wal
+*.htm
+SD9/BallzClone/.vs/BallzClone/v15/.suo
