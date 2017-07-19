@@ -63,5 +63,6 @@ SD8/UnrealFlocking/Saved/
 *.db-shm
 *.db-wal
 *.htm
-SD9/BallzClone/.vs/BallzClone/v15/.suo
+*.suo
 *.ipch
+Temporary
