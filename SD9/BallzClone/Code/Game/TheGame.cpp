@@ -71,7 +71,7 @@ TheGame::TheGame()
 	m_currentGeneration = 1;
 	m_genomeIteration = 0;
 	m_aiShotDirection = Vector2::ZERO;
-	m_aiIsPlaying = true;
+	m_aiIsPlaying = false;
 }
 
 
